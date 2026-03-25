@@ -1741,7 +1741,7 @@ E/I 수렴도: ${sig?.eiScore||0}% / S/N: ${sig?.snScore||0}% / T/F: ${sig?.tfSc
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
-        max_tokens:4096,
+        max_tokens:8192,
         system,
         messages:[{role:'user',content:userData}]
       })
@@ -1951,7 +1951,7 @@ async function runCompatAnalysis() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
+        max_tokens: 8192,
         system: `당신은 30년 경력의 사주명리학자로, 궁합과 혼인, 자녀운을 전문으로 보는 역술인입니다.
 두 사람의 사주팔자를 면밀히 살펴 궁합의 길흉을 판단하고, 구체적인 시기와 상황을 안내합니다.
 
@@ -2019,7 +2019,7 @@ async function runWealthAnalysis() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
+        max_tokens: 8192,
         system: `당신은 사주명리로 재물운과 투자 적성을 전문으로 보는 역술인입니다.
 오행과 일간의 특성, 귀인성을 종합하여 이 사람에게 맞는 재물 운용 전략을 안내합니다.
 
@@ -2093,7 +2093,7 @@ async function runCareerAnalysis() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
+        max_tokens: 8192,
         system: `당신은 사주명리로 직업 적성과 진로를 전문으로 보는 역술인입니다.
 타고난 오행과 일간의 성질, MBTI 인지기능, 별자리 원소를 통합하여 이 사람에게 맞는 직업과 성장 경로를 안내합니다.
 
