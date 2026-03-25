@@ -1,0 +1,9 @@
+{
+  "name": "trinity-app",
+  "version": "1.0.0",
+  "description": "TRINITY — 사주 × 별자리 × MBTI 통합 성격분석",
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  }
+}

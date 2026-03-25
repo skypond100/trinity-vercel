@@ -1,0 +1,15 @@
+# 환경변수 (절대 GitHub에 올리지 마세요!)
+.env
+.env.local
+.env.*.local
+
+# Vercel
+.vercel
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

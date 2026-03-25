@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>TRINITY — 통합 성격 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#05050d;--deep:#08081a;--panel:rgba(255,255,255,.036);
+  --gold:#c8a848;--gold-lt:#e8c868;--gold-dk:#604808;
+  --jade:#34beb6;--rose:#c85050;--iris:#6868c8;--amber:#d89828;
+  --silver:#8898a8;--cream:#ece0c4;--mist:#b8c8d8;
+  --border:rgba(200,168,72,.16);--sf:rgba(255,255,255,.065);
+  --text:#ccdde8;--dim:#607080;
+  --wood:#40a858;--fire:#c84040;--earth:#b88818;--metal:#7898b0;--water:#2858a8;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--void);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;font-size:14px;overflow-x:hidden}
+
+/* ── cosmos bg ── */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 5% 9%,rgba(255,255,220,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 18%30%,rgba(200,215,255,.6) 0%,transparent 100%),
+    radial-gradient(2px 2px at 38% 5%,rgba(255,255,255,.95) 0%,transparent 100%),
+    radial-gradient(1px 1px at 62%50%,rgba(255,238,196,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 80%16%,rgba(218,228,255,.7) 0%,transparent 100%),
+    radial-gradient(1px 1px at 27%70%,rgba(255,255,196,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 52%76%,rgba(196,218,255,.55) 0%,transparent 100%),
+    radial-gradient(1px 1px at 8%54%,rgba(255,248,218,.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 72%82%,rgba(218,238,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 45%38%,rgba(255,255,238,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 86%34%,rgba(255,228,196,.55) 0%,transparent 100%),
+    radial-gradient(1px 1px at 33%88%,rgba(196,255,228,.35) 0%,transparent 100%);}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 52% 32% at 14%18%,rgba(72,122,192,.055) 0%,transparent 70%),
+    radial-gradient(ellipse 42% 28% at 84%68%,rgba(196,162,68,.045) 0%,transparent 70%),
+    radial-gradient(ellipse 38% 48% at 46%46%,rgba(52,186,182,.03) 0%,transparent 70%);}
+
+.wrap{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:0 0 100px}
+
+/* ── HEADER ── */
+.hdr{text-align:center;padding:22px 20px 0}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;letter-spacing:.22em;
+  background:linear-gradient(135deg,var(--gold-dk),var(--gold),var(--gold-lt));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 10px rgba(200,164,72,.28))}
+.logo-sub{font-size:.6rem;color:var(--dim);letter-spacing:.14em;margin-top:3px}
+.system-pills{display:flex;justify-content:center;gap:6px;margin-top:10px;flex-wrap:wrap}
+.pill{font-size:.6rem;padding:3px 10px;border-radius:20px;border:1px solid;font-weight:600;letter-spacing:.04em}
+.p-g{border-color:rgba(200,168,72,.4);color:var(--gold-lt);background:rgba(200,168,72,.08)}
+.p-j{border-color:rgba(52,190,182,.38);color:var(--jade);background:rgba(52,190,182,.07)}
+.p-i{border-color:rgba(104,104,200,.38);color:#9898e0;background:rgba(104,104,200,.07)}
+
+/* ── MAIN NAV ── */
+.mnav{display:flex;gap:3px;margin:16px 16px 0;background:rgba(0,0,0,.28);
+  border-radius:12px;padding:4px;border:1px solid rgba(255,255,255,.046)}
+.mnav-btn{flex:1;padding:8px 3px;border-radius:9px;border:none;background:transparent;
+  color:var(--dim);font-size:.68rem;font-family:'Noto Sans KR',sans-serif;cursor:pointer;
+  transition:all .2s;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:2px}
+.mnav-btn .ico{font-size:.95rem}
+.mnav-btn.on{background:rgba(200,168,72,.13);color:var(--gold-lt);border:1px solid rgba(200,168,72,.24)}
+
+/* ── PAGES ── */
+.pg{display:none}.pg.on{display:block}
+.pb{padding:14px 16px 0}
+
+/* ── CARDS ── */
+.card{background:var(--panel);border:1px solid var(--sf);border-radius:18px;
+  padding:20px;backdrop-filter:blur(14px);margin-bottom:14px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px}
+.gline::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.jline::before{background:linear-gradient(90deg,transparent,var(--jade),transparent)}
+.iline::before{background:linear-gradient(90deg,transparent,var(--iris),transparent)}
+.rline::before{background:linear-gradient(90deg,transparent,var(--rose),transparent)}
+.fline::before{background:linear-gradient(90deg,var(--rose),var(--gold),var(--jade))}
+
+.ct{font-family:'Noto Serif KR',serif;font-size:.8rem;font-weight:600;letter-spacing:.06em;
+  margin-bottom:15px;display:flex;align-items:center;gap:8px}
+.ct.g{color:var(--gold-lt)}.ct.j{color:var(--jade)}.ct.i{color:#9898e0}
+.ct.r{color:#ff8888}.ct.cr{color:var(--cream)}
+
+/* ── FORM ── */
+.fg{display:grid;gap:9px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.fld label{display:block;font-size:.6rem;color:var(--dim);letter-spacing:.06em;margin-bottom:4px;font-weight:500}
+.fld input,.fld select{width:100%;background:rgba(0,0,0,.38);border:1px solid rgba(200,168,72,.14);
+  border-radius:9px;padding:9px 10px;color:var(--text);font-size:.8rem;
+  font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
+.fld input:focus,.fld select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,168,72,.1)}
+select option{background:#10101e}
+
+/* ── BUTTONS ── */
+.btn{width:100%;padding:12px;border-radius:11px;border:1px solid;
+  font-family:'Cormorant Garamond',serif;font-size:.92rem;font-weight:700;
+  letter-spacing:.1em;cursor:pointer;transition:all .26s;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.055);opacity:0;transition:opacity .2s}
+.btn:hover::after{opacity:1}
+.btn:disabled{opacity:.32;cursor:not-allowed}
+.btn-g{background:linear-gradient(135deg,rgba(200,168,72,.2),rgba(200,168,72,.07));border-color:var(--gold);color:var(--gold-lt)}
+.btn-g:hover:not(:disabled){box-shadow:0 0 20px rgba(200,168,72,.26);transform:translateY(-1px)}
+.btn-j{background:linear-gradient(135deg,rgba(52,190,182,.14),rgba(52,190,182,.04));border-color:var(--jade);color:var(--jade)}
+.btn-f{background:linear-gradient(135deg,rgba(200,80,80,.14),rgba(200,168,72,.12),rgba(52,190,182,.1));
+  border-color:rgba(200,168,72,.5);color:var(--gold-lt)}
+.btn-f:hover:not(:disabled){box-shadow:0 0 22px rgba(200,168,72,.2);transform:translateY(-1px)}
+
+/* ── SAJU PILLARS ── */
+.pr{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:13px}
+.pil{text-align:center}
+.plbl{font-size:.56rem;color:var(--dim);margin-bottom:5px;letter-spacing:.05em}
+.cb{width:100%;aspect-ratio:1;border-radius:11px;margin-bottom:4px;
+  display:flex;align-items:center;justify-content:center;font-size:1.38rem;font-weight:700}
+.cb.il{box-shadow:0 0 0 2px var(--gold),0 0 10px rgba(200,168,72,.28)}
+.ot{font-size:.54rem;font-weight:700;padding:2px 6px;border-radius:7px;display:inline-block;margin-bottom:3px}
+.ssr{display:flex;flex-wrap:wrap;gap:2px;justify-content:center}
+.sd{font-size:.48rem;padding:1px 5px;border-radius:6px;font-weight:600}
+.sg{color:var(--gold-lt);background:rgba(200,168,72,.17);border:1px solid rgba(200,168,72,.3)}
+.ss{color:#ff8080;background:rgba(200,72,72,.13);border:1px solid rgba(200,72,72,.27)}
+.si{color:var(--jade);background:rgba(52,190,182,.11);border:1px solid rgba(52,190,182,.24)}
+
+.ow{color:var(--wood);background:rgba(64,168,88,.12)}
+.of{color:#ff6868;background:rgba(200,64,64,.12)}
+.oe{color:#e8b830;background:rgba(184,136,24,.12)}
+.om{color:var(--metal);background:rgba(120,152,176,.11)}
+.ou{color:#5080d8;background:rgba(40,88,168,.13)}
+.bw{background:rgba(64,168,88,.17);border:1px solid rgba(64,168,88,.3)}
+.bf{background:rgba(200,64,64,.21);border:1px solid rgba(200,64,64,.34)}
+.be{background:rgba(184,136,24,.17);border:1px solid rgba(184,136,24,.3)}
+.bm{background:rgba(120,152,176,.14);border:1px solid rgba(120,152,176,.27)}
+.bu{background:rgba(40,88,168,.21);border:1px solid rgba(40,88,168,.34)}
+
+.obars{background:rgba(0,0,0,.2);border-radius:10px;padding:12px}
+.obr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.obr:last-child{margin-bottom:0}
+.obl{font-size:.6rem;width:24px;font-weight:700}
+.obt{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden}
+.obf{height:100%;border-radius:3px;transition:width .9s ease}
+.obn{font-size:.58rem;color:var(--dim);width:13px;text-align:right}
+
+/* ── MBTI AXES ── */
+.maxrow{display:flex;gap:6px;margin-bottom:9px}
+.maxlbl{font-size:.62rem;color:var(--dim);margin-bottom:6px;letter-spacing:.04em}
+.maxbtn{flex:1;padding:8px 5px;border-radius:8px;border:1px solid var(--sf);
+  background:transparent;color:var(--dim);font-family:'Cormorant Garamond',serif;
+  font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.04em}
+.maxbtn.on{background:rgba(104,104,200,.14);border-color:var(--iris);color:#a8a8e8;
+  box-shadow:0 0 8px rgba(104,104,200,.14)}
+.mbti-show{text-align:center;font-family:'Cormorant Garamond',serif;font-size:2rem;
+  font-weight:700;letter-spacing:.22em;color:var(--gold-lt);padding:12px 0 4px;
+  text-shadow:0 0 20px rgba(200,168,72,.35);min-height:2.8rem}
+
+/* ── ZODIAC ── */
+.z3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px}
+.zs{background:rgba(0,0,0,.2);border:1px solid var(--sf);border-radius:11px;padding:10px 8px;text-align:center}
+.zt{font-size:.55rem;color:var(--dim);margin-bottom:3px;letter-spacing:.04em}
+.zn{font-size:.82rem;color:var(--text);font-weight:500}
+.ze{font-size:.58rem;margin-top:2px}
+
+/* ── JEOLGI notice ── */
+.jn{border-radius:9px;padding:9px 13px;font-size:.65rem;line-height:1.6;
+  display:flex;align-items:flex-start;gap:7px;margin-bottom:10px}
+.jn.ok{color:rgba(52,190,182,.9);background:rgba(52,190,182,.07);border:1px solid rgba(52,190,182,.28)}
+.jn.warn{color:rgba(216,152,40,.9);background:rgba(216,152,40,.07);border:1px solid rgba(216,152,40,.28)}
+
+/* ── CONVERGENCE SIGNAL ── */
+.conv-signal{background:rgba(0,0,0,.2);border-radius:12px;padding:16px;margin-bottom:12px}
+.cs-title{font-size:.65rem;color:var(--dim);letter-spacing:.08em;margin-bottom:12px}
+.cs-row{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.cs-row:last-child{margin-bottom:0}
+.cs-lbl{font-size:.62rem;color:var(--dim);width:72px;flex-shrink:0}
+.cs-bar{flex:1;height:5px;background:rgba(255,255,255,.055);border-radius:3px;overflow:hidden}
+.cs-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.cs-pct{font-family:'Cormorant Garamond',serif;font-size:.85rem;font-weight:700;width:30px;text-align:right}
+.cs-star{font-size:.65rem;width:22px;text-align:right}
+
+/* ── NARRATIVE CARDS ── */
+/* 핵심 — 말하는 사람처럼 */
+.narr-block{margin-bottom:18px}
+.narr-label{font-size:.62rem;letter-spacing:.1em;font-weight:700;margin-bottom:8px;
+  display:flex;align-items:center;gap:6px}
+.narr-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+.nl-core{color:var(--gold-lt)}
+.nl-conv{color:var(--jade)}
+.nl-tension{color:#e89070}
+.nl-layer{color:#9898e0}
+
+.narr-text{font-family:'Noto Serif KR',serif;font-size:.85rem;line-height:2.05;
+  color:rgba(210,226,238,.88);word-break:keep-all;position:relative;padding-left:12px}
+.narr-text::before{content:'';position:absolute;left:0;top:4px;bottom:4px;
+  width:2px;border-radius:2px;background:var(--border)}
+.narr-text.conv-text::before{background:var(--jade)}
+.narr-text.tension-text::before{background:#e89070}
+.narr-text.layer-text::before{background:var(--iris)}
+
+.keyword-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.kw{font-size:.68rem;padding:4px 12px;border-radius:20px;border:1px solid;font-weight:600;letter-spacing:.03em}
+.kw.s3{border-color:rgba(200,168,72,.5);color:var(--gold-lt);background:rgba(200,168,72,.12)}
+.kw.s2{border-color:rgba(52,190,182,.4);color:var(--jade);background:rgba(52,190,182,.09)}
+.kw.s1{border-color:rgba(104,104,200,.35);color:#9898e0;background:rgba(104,104,200,.08)}
+.kw.tension{border-color:rgba(200,120,72,.4);color:#e8a080;background:rgba(200,120,72,.08);text-decoration:line-through;opacity:.55}
+
+.source-badge{display:inline-flex;gap:3px;margin-left:6px;vertical-align:middle}
+.sb{font-size:.52rem;padding:1px 5px;border-radius:5px;font-weight:700}
+.sb-g{background:rgba(200,168,72,.22);color:var(--gold-lt);border:1px solid rgba(200,168,72,.3)}
+.sb-j{background:rgba(52,190,182,.15);color:var(--jade);border:1px solid rgba(52,190,182,.28)}
+.sb-i{background:rgba(104,104,200,.15);color:#9898e0;border:1px solid rgba(104,104,200,.28)}
+
+/* ── AI output ── */
+.aiout{font-family:'Noto Serif KR',serif;font-size:.82rem;line-height:2.1;
+  color:rgba(208,224,236,.86);white-space:pre-wrap;min-height:60px;word-break:keep-all}
+
+/* loading */
+.ld{display:inline-flex;gap:4px}
+.ld span{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.28;
+  animation:ldp 1.2s ease-in-out infinite}
+.ld span:nth-child(2){animation-delay:.2s}.ld span:nth-child(3){animation-delay:.4s}
+@keyframes ldp{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+.empty{text-align:center;padding:30px 0;color:var(--dim);font-size:.75rem;line-height:1.8}
+.ei{font-size:1.8rem;opacity:.22;margin-bottom:8px}
+
+/* summary strip */
+.s3strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:12px}
+.s3t{background:rgba(0,0,0,.2);border:1px solid var(--sf);border-radius:11px;padding:10px 7px;text-align:center}
+.s3n{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700}
+.s3l{font-size:.56rem;color:var(--dim);margin-top:2px}
+
+/* weight sliders */
+.wrow{margin-bottom:12px}
+.whdr{display:flex;justify-content:space-between;margin-bottom:5px}
+.wnm{font-size:.68rem;font-weight:600}
+.wpct{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:700}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;
+  outline:none;cursor:pointer;border:none;padding:0;background:rgba(255,255,255,.08)}
+input[type=range].rg-g::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 7px var(--gold)}
+input[type=range].rg-j::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--jade);cursor:pointer;box-shadow:0 0 7px var(--jade)}
+input[type=range].rg-i::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--iris);cursor:pointer;box-shadow:0 0 7px var(--iris)}
+
+/* fade */
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.fu{animation:fu .36s ease forwards}
+
+/* sub-tab */
+.subnav{display:flex;gap:3px;margin-bottom:14px;background:rgba(0,0,0,.26);
+  border-radius:10px;padding:3px;border:1px solid rgba(255,255,255,.045)}
+.snbtn{flex:1;padding:7px 4px;border-radius:8px;border:none;background:transparent;
+  color:var(--dim);font-size:.65rem;font-family:'Noto Sans KR',sans-serif;cursor:pointer;
+  transition:all .2s;font-weight:500;letter-spacing:.02em}
+.snbtn.on{background:rgba(200,168,72,.12);color:var(--gold-lt);border:1px solid rgba(200,168,72,.24)}
+
+.subpanel{display:none}.subpanel.on{display:block}
+
+/* ── 프리미엄 기능 공통 ── */
+.premium-nav{display:flex;gap:6px;flex-wrap:wrap;padding:14px 16px 0}
+.pnav-btn{
+  padding:9px 16px;border-radius:20px;border:1px solid;
+  background:transparent;cursor:pointer;transition:all .25s;
+  font-family:'Noto Sans KR',sans-serif;font-size:.72rem;font-weight:600;
+  letter-spacing:.03em;display:flex;align-items:center;gap:6px;
+}
+.pnav-btn .pico{font-size:.9rem}
+.pnav-btn.compat-btn{border-color:rgba(200,80,80,.35);color:#f08888;background:rgba(200,80,80,.06)}
+.pnav-btn.wealth-btn{border-color:rgba(200,168,72,.4);color:var(--gold-lt);background:rgba(200,168,72,.07)}
+.pnav-btn.career-btn{border-color:rgba(52,190,182,.38);color:var(--jade);background:rgba(52,190,182,.06)}
+.pnav-btn.on.compat-btn{background:rgba(200,80,80,.16);box-shadow:0 0 14px rgba(200,80,80,.18)}
+.pnav-btn.on.wealth-btn{background:rgba(200,168,72,.18);box-shadow:0 0 14px rgba(200,168,72,.2)}
+.pnav-btn.on.career-btn{background:rgba(52,190,182,.16);box-shadow:0 0 14px rgba(52,190,182,.18)}
+
+.ppanel{display:none;padding:0 16px}.ppanel.on{display:block}
+
+/* 궁합 상대 입력 */
+.partner-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px}
+.pc{background:rgba(0,0,0,.2);border-radius:12px;padding:12px;border:1px solid var(--sf)}
+.pc.me-side{border-color:rgba(200,168,72,.22)}
+.pc.you-side{border-color:rgba(200,80,80,.22)}
+.pc-lbl{font-size:.58rem;font-weight:700;letter-spacing:.08em;margin-bottom:5px}
+.pc-lbl.me{color:var(--gold-lt)}.pc-lbl.you{color:#f08888}
+.pc-ilju{font-size:1.1rem;font-weight:700;margin-bottom:2px}
+.pc-ohname{font-size:.6rem}
+.vs-circle{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.3);
+  border:1px solid var(--sf);display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;color:var(--dim);flex-shrink:0;align-self:center}
+
+/* 점수 링 */
+.score-ring{
+  width:110px;height:110px;border-radius:50%;margin:0 auto 10px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;transition:all 1s ease;
+}
+.score-ring::before{content:'';position:absolute;inset:8px;border-radius:50%;background:var(--void)}
+.ring-num{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;
+  position:relative;z-index:1;line-height:1}
+.ring-lbl{font-size:.58rem;color:var(--dim);position:relative;z-index:1;margin-top:2px}
+
+/* 재물·직업 선택 칩 */
+.chip-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:7px 14px;border-radius:20px;border:1px solid var(--sf);
+  background:rgba(0,0,0,.2);color:var(--dim);font-size:.7rem;cursor:pointer;
+  transition:all .2s;font-family:'Noto Sans KR',sans-serif;font-weight:500}
+.chip:hover{border-color:var(--gold);color:var(--gold-lt)}
+.chip.on{background:rgba(200,168,72,.15);border-color:var(--gold);color:var(--gold-lt)}
+.chip.jade-chip.on{background:rgba(52,190,182,.13);border-color:var(--jade);color:var(--jade)}
+
+/* 결과 섹션 분리선 */
+.res-section{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.055)}
+.res-section:last-child{border-bottom:none;margin-bottom:0}
+.rs-title{font-family:'Noto Serif KR',serif;font-size:.82rem;font-weight:600;
+  color:var(--gold-lt);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.rs-body{font-family:'Noto Serif KR',serif;font-size:.8rem;line-height:2.05;
+  color:rgba(208,224,236,.86);white-space:pre-wrap;word-break:keep-all}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">TRINITY</div>
+  <div class="logo-sub">사주 · 별자리 · MBTI 통합 분석</div>
+  <div class="system-pills">
+    <span class="pill p-g">☯ 절기보정 사주</span>
+    <span class="pill p-j">☽ 별자리 3중</span>
+    <span class="pill p-i">✦ MBTI 인지기능</span>
+  </div>
+</div>
+
+<!-- MAIN NAV -->
+<div class="mnav">
+  <button class="mnav-btn on" onclick="goP('input',this)"><span class="ico">✏</span><span>입력</span></button>
+  <button class="mnav-btn" onclick="goP('analysis',this)"><span class="ico">⊕</span><span>분석</span></button>
+  <button class="mnav-btn" onclick="goP('saju',this)"><span class="ico">☯</span><span>사주</span></button>
+  <button class="mnav-btn" onclick="goP('zodiac',this)"><span class="ico">☽</span><span>별자리</span></button>
+  <button class="mnav-btn" onclick="goP('mbti',this)"><span class="ico">✦</span><span>MBTI</span></button>
+</div>
+
+<!-- 프리미엄 기능 탭 -->
+<div class="premium-nav">
+  <button class="pnav-btn compat-btn" id="pnav-compat" onclick="openPremium('compat',this)">
+    <span class="pico">♡</span>궁합 분석
+  </button>
+  <button class="pnav-btn wealth-btn" id="pnav-wealth" onclick="openPremium('wealth',this)">
+    <span class="pico">💰</span>재물운
+  </button>
+  <button class="pnav-btn career-btn" id="pnav-career" onclick="openPremium('career',this)">
+    <span class="pico">🎯</span>직업&학업운
+  </button>
+</div>
+
+<!-- ══════ PAGE: 입력 ══════ -->
+<div class="pg on pb" id="pg-input">
+
+  <!-- 사주 -->
+  <div class="card gline" style="margin-top:14px">
+    <div class="ct g"><span>☯</span>사주팔자 입력</div>
+    <div class="fg g4" style="margin-bottom:9px">
+      <div class="fld"><label>년</label><input type="number" id="by" placeholder="1990" min="1930" max="2010"></div>
+      <div class="fld"><label>월</label>
+        <select id="bm" onchange="autoDetectZodiac()"><option value="">월</option>
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+          <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+          <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+        </select></div>
+      <div class="fld"><label>일</label><input type="number" id="bd" placeholder="15" min="1" max="31" oninput="autoDetectZodiac()"></div>
+      <div class="fld"><label>시 <span style="font-size:.55rem;opacity:.5">(출생 시간)</span></label>
+        <select id="bh"><option value="">시 선택</option>
+          <option value="23">子시 · 밤 11–1시</option>
+          <option value="1">丑시 · 새벽 1–3시</option>
+          <option value="3">寅시 · 새벽 3–5시</option>
+          <option value="5">卯시 · 새벽 5–7시</option>
+          <option value="7">辰시 · 오전 7–9시</option>
+          <option value="9">巳시 · 오전 9–11시</option>
+          <option value="11">午시 · 오전 11–오후 1시</option>
+          <option value="13">未시 · 오후 1–3시</option>
+          <option value="15">申시 · 오후 3–5시</option>
+          <option value="17">酉시 · 오후 5–7시</option>
+          <option value="19">戌시 · 저녁 7–9시</option>
+          <option value="21">亥시 · 밤 9–11시</option>
+        </select></div>
+    </div>
+    <div class="fg g2">
+      <div class="fld"><label>성별</label>
+        <select id="gd"><option value="">성별</option><option value="남">남 (陽)</option><option value="여">여 (陰)</option></select></div>
+      <div class="fld"><label>이름 (선택)</label><input type="text" id="nm" placeholder="홍길동"></div>
+    </div>
+  </div>
+
+  <input type="hidden" id="zs-hidden" value="">
+
+  <!-- 별자리 — 생년월일에서 자동 계산 -->
+  <div class="card jline">
+    <div class="ct j"><span>☽</span>별자리 <span style="font-size:.65rem;font-weight:400;color:var(--dim);letter-spacing:.02em">생년월일 입력 시 자동 계산</span></div>
+
+    <!-- 자동 감지 표시 -->
+    <div id="z-auto-display" style="background:rgba(52,190,182,.07);border:1px solid rgba(52,190,182,.22);
+      border-radius:12px;padding:14px 16px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:.62rem;color:var(--jade);letter-spacing:.08em;font-weight:600">☽ 태양궁 (자동)</span>
+        <span id="z-auto-sun" style="font-size:.88rem;color:var(--text);font-weight:500">생년월일을 입력하면 자동으로 표시돼요</span>
+      </div>
+      <div style="font-size:.6rem;color:var(--dim);line-height:1.6" id="z-auto-desc">
+        위 사주 입력란에서 월·일을 입력하면 태양궁이 자동으로 계산됩니다.
+      </div>
+    </div>
+
+    <!-- 달궁·어센던트만 선택 -->
+    <div class="fg g2">
+      <div class="fld">
+        <label>달궁 <span style="opacity:.5">(감정·내면 — 선택)</span></label>
+        <select id="zm" onchange="updateZAccuracy()"><option value="">선택 안 함</option>
+          <option value="양자리">♈ 양자리</option><option value="황소자리">♉ 황소자리</option>
+          <option value="쌍둥이자리">♊ 쌍둥이자리</option><option value="게자리">♋ 게자리</option>
+          <option value="사자자리">♌ 사자자리</option><option value="처녀자리">♍ 처녀자리</option>
+          <option value="천칭자리">♎ 천칭자리</option><option value="전갈자리">♏ 전갈자리</option>
+          <option value="궁수자리">♐ 궁수자리</option><option value="염소자리">♑ 염소자리</option>
+          <option value="물병자리">♒ 물병자리</option><option value="물고기자리">♓ 물고기자리</option>
+        </select>
+      </div>
+      <div class="fld">
+        <label>어센던트 <span style="opacity:.5">(대외 인상 — 선택)</span></label>
+        <select id="za" onchange="updateZAccuracy()"><option value="">선택 안 함</option>
+          <option value="양자리">♈ 양자리</option><option value="황소자리">♉ 황소자리</option>
+          <option value="쌍둥이자리">♊ 쌍둥이자리</option><option value="게자리">♋ 게자리</option>
+          <option value="사자자리">♌ 사자자리</option><option value="처녀자리">♍ 처녀자리</option>
+          <option value="천칭자리">♎ 천칭자리</option><option value="전갈자리">♏ 전갈자리</option>
+          <option value="궁수자리">♐ 궁수자리</option><option value="염소자리">♑ 염소자리</option>
+          <option value="물병자리">♒ 물병자리</option><option value="물고기자리">♓ 물고기자리</option>
+        </select>
+      </div>
+    </div>
+    <div id="z-acc" style="font-size:.6rem;color:var(--dim);margin-top:8px">
+      태양궁만 → 기본 정확도
+    </div>
+  </div>
+
+  <!-- MBTI -->
+  <div class="card iline">
+    <div class="ct i"><span>✦</span>MBTI 선택</div>
+    <div class="maxlbl">에너지 방향</div>
+    <div class="maxrow">
+      <button class="maxbtn" data-ax="EI" data-v="E" onclick="selM(this)">E 외향</button>
+      <button class="maxbtn" data-ax="EI" data-v="I" onclick="selM(this)">I 내향</button>
+    </div>
+    <div class="maxlbl">인식 기능</div>
+    <div class="maxrow">
+      <button class="maxbtn" data-ax="SN" data-v="S" onclick="selM(this)">S 감각</button>
+      <button class="maxbtn" data-ax="SN" data-v="N" onclick="selM(this)">N 직관</button>
+    </div>
+    <div class="maxlbl">판단 기능</div>
+    <div class="maxrow">
+      <button class="maxbtn" data-ax="TF" data-v="T" onclick="selM(this)">T 사고</button>
+      <button class="maxbtn" data-ax="TF" data-v="F" onclick="selM(this)">F 감정</button>
+    </div>
+    <div class="maxlbl">생활 방식</div>
+    <div class="maxrow">
+      <button class="maxbtn" data-ax="JP" data-v="J" onclick="selM(this)">J 판단</button>
+      <button class="maxbtn" data-ax="JP" data-v="P" onclick="selM(this)">P 인식</button>
+    </div>
+    <div class="mbti-show" id="mbti-show">— — — —</div>
+  </div>
+
+  <!-- 가중치 — 고정 5:2:3 -->
+  <div class="card" style="background:rgba(200,168,72,.04);border-color:rgba(200,168,72,.18)">
+    <div class="ct cr"><span>⚖</span>분석 가중치 <span style="font-size:.6rem;color:var(--dim);font-weight:400;letter-spacing:.02em">— 트리니티 기본값 고정</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="background:rgba(200,168,72,.1);border:1px solid rgba(200,168,72,.3);border-radius:12px;padding:12px 8px;text-align:center">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--gold-lt);line-height:1">50%</div>
+        <div style="font-size:.62rem;color:var(--gold-lt);margin-top:4px;font-weight:600">☯ 사주</div>
+        <div style="font-size:.55rem;color:var(--dim);margin-top:3px">타고난 기질의 뿌리</div>
+      </div>
+      <div style="background:rgba(52,190,182,.08);border:1px solid rgba(52,190,182,.25);border-radius:12px;padding:12px 8px;text-align:center">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--jade);line-height:1">20%</div>
+        <div style="font-size:.62rem;color:var(--jade);margin-top:4px;font-weight:600">☽ 별자리</div>
+        <div style="font-size:.55rem;color:var(--dim);margin-top:3px">우주적 원형 에너지</div>
+      </div>
+      <div style="background:rgba(104,104,200,.09);border:1px solid rgba(104,104,200,.28);border-radius:12px;padding:12px 8px;text-align:center">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:#9898e0;line-height:1">30%</div>
+        <div style="font-size:.62rem;color:#9898e0;margin-top:4px;font-weight:600">✦ MBTI</div>
+        <div style="font-size:.55rem;color:var(--dim);margin-top:3px">인지기능 선호 패턴</div>
+      </div>
+    </div>
+    <div style="font-size:.62rem;color:var(--dim);text-align:center;line-height:1.7">
+      사주가 가장 근본적인 기질을 담고 있어 비중이 높습니다.<br>
+      세 시스템을 종합하여 가장 정확한 분석을 제공합니다.
+    </div>
+  </div>
+
+  <button class="btn btn-f" onclick="runAll()">⊕ 트리니티 통합 분석 시작</button>
+</div>
+
+<!-- ══════ PAGE: 통합 분석 ══════ -->
+<div class="pg pb" id="pg-analysis">
+
+  <div id="analysis-empty" class="card" style="margin-top:14px">
+    <div class="empty"><div class="ei">⊕</div>입력 탭에서 정보를 모두 입력하고<br>분석을 시작해주세요</div>
+  </div>
+
+  <div id="analysis-content" style="display:none">
+
+    <!-- 수렴 신호 -->
+    <div class="card fline fu" style="margin-top:14px">
+      <div class="ct cr"><span>◈</span>3시스템 수렴 신호</div>
+      <div class="conv-signal" id="conv-signal"></div>
+      <!-- 키워드 -->
+      <div style="font-size:.62rem;color:var(--dim);letter-spacing:.08em;margin-bottom:8px">✦ 수렴 키워드 (굵을수록 강한 패턴)</div>
+      <div class="keyword-row" id="kw-row"></div>
+    </div>
+
+    <!-- SUB TABS -->
+    <div class="subnav">
+      <button class="snbtn on" onclick="switchSub('core',this)">핵심 성격</button>
+      <button class="snbtn" onclick="switchSub('strength',this)">강점·약점</button>
+      <button class="snbtn" onclick="switchSub('relation',this)">관계·사랑</button>
+      <button class="snbtn" onclick="switchSub('life',this)">삶의 방향</button>
+      <button class="snbtn" onclick="switchSub('ai',this)">AI 통합</button>
+    </div>
+
+    <!-- 핵심 성격 -->
+    <div class="subpanel on" id="sp-core">
+      <div class="card fline fu" id="core-card">
+        <div class="ct cr"><span>◎</span>당신의 핵심 성격</div>
+        <div id="core-narr"></div>
+      </div>
+    </div>
+
+    <!-- 강점·약점 -->
+    <div class="subpanel" id="sp-strength">
+      <div class="card gline fu">
+        <div class="ct g"><span>★</span>강점 & 주의할 점</div>
+        <div id="strength-narr"></div>
+      </div>
+    </div>
+
+    <!-- 관계·사랑 -->
+    <div class="subpanel" id="sp-relation">
+      <div class="card rline fu">
+        <div class="ct r"><span>♡</span>관계 & 사랑 패턴</div>
+        <div id="relation-narr"></div>
+      </div>
+    </div>
+
+    <!-- 삶의 방향 -->
+    <div class="subpanel" id="sp-life">
+      <div class="card jline fu">
+        <div class="ct j"><span>☽</span>삶의 방향 & 조언</div>
+        <div id="life-narr"></div>
+      </div>
+    </div>
+
+    <!-- AI -->
+    <div class="subpanel" id="sp-ai">
+      <div class="card fline fu">
+        <div class="ct cr"><span>🌌</span>Claude AI 통합 리포트</div>
+        <div class="aiout" id="ai-out">
+          <div class="empty"><div class="ei">✦</div>AI에게 더 깊은 분석을 요청해보세요</div>
+        </div>
+        <button class="btn btn-j" style="margin-top:12px" id="ai-btn" onclick="runAI()">
+          🌌 역술인 종합 풀이 — A3 4장 분량 분석
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════ PAGE: 사주 상세 ══════ -->
+<div class="pg pb" id="pg-saju">
+  <div id="saju-empty" class="card" style="margin-top:14px">
+    <div class="empty"><div class="ei">☯</div>입력 탭에서 생년월일을 입력해주세요</div>
+  </div>
+  <div id="saju-detail" style="display:none">
+    <div id="jeolgi-notice" style="margin-top:14px"></div>
+    <div class="card gline fu">
+      <div class="ct g"><span>▦</span>사주팔자</div>
+      <div class="pr" id="saju-pillars"></div>
+      <div class="obars" id="saju-oh"></div>
+    </div>
+    <div class="s3strip" id="ss-strip"></div>
+    <div class="card gline fu">
+      <div class="ct g"><span>⭐</span>귀인·신살</div>
+      <div id="shinsal-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PAGE: 별자리 상세 ══════ -->
+<div class="pg pb" id="pg-zodiac">
+  <div id="zodiac-empty" class="card" style="margin-top:14px">
+    <div class="empty"><div class="ei">☽</div>입력 탭에서 별자리를 선택해주세요</div>
+  </div>
+  <div id="zodiac-detail" style="display:none">
+    <div class="card jline fu" style="margin-top:14px">
+      <div class="ct j"><span>☽</span>별자리 3중 구조</div>
+      <div class="z3" id="z3-slots"></div>
+      <div id="z-narr" style="font-size:.76rem;color:rgba(200,220,230,.75);line-height:1.88;margin-top:12px"></div>
+    </div>
+    <div class="card jline fu">
+      <div class="ct j"><span>◈</span>원소·성질 분석</div>
+      <div id="z-element-detail"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PAGE: MBTI 상세 ══════ -->
+<div class="pg pb" id="pg-mbti">
+  <div id="mbti-empty" class="card" style="margin-top:14px">
+    <div class="empty"><div class="ei">✦</div>입력 탭에서 MBTI를 선택해주세요</div>
+  </div>
+  <div id="mbti-detail" style="display:none">
+    <div class="card iline fu" style="margin-top:14px">
+      <div class="ct i"><span>✦</span>MBTI & 인지기능 스택</div>
+      <div id="mbti-stack"></div>
+    </div>
+    <div class="card iline fu">
+      <div class="ct i"><span>◈</span>MBTI 성격 분석</div>
+      <div id="mbti-narr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     프리미엄 패널 — 궁합 / 재물운 / 직업&학업운
+     (기존 페이지 구조와 별개로 premium-nav 아래 표시)
+══════════════════════════════════════════ -->
+
+<!-- ♡ 궁합 분석 패널 -->
+<div class="ppanel" id="pp-compat">
+  <div class="card rline fu" style="margin-top:14px">
+    <div class="ct r"><span>♡</span>상대방 정보 입력</div>
+    <div class="fg g4" style="margin-bottom:9px">
+      <div class="fld"><label>년</label><input type="number" id="cy" placeholder="1992" min="1930" max="2010"></div>
+      <div class="fld"><label>월</label>
+        <select id="cm"><option value="">월</option>
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+          <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+          <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+        </select></div>
+      <div class="fld"><label>일</label><input type="number" id="cd" placeholder="20" min="1" max="31"></div>
+      <div class="fld"><label>시</label>
+        <select id="ch"><option value="">시</option>
+          <option value="23">子시 · 밤11–1</option><option value="1">丑시 · 새벽1–3</option>
+          <option value="3">寅시 · 새벽3–5</option><option value="5">卯시 · 새벽5–7</option>
+          <option value="7">辰시 · 오전7–9</option><option value="9">巳시 · 오전9–11</option>
+          <option value="11">午시 · 오전11–오후1</option><option value="13">未시 · 오후1–3</option>
+          <option value="15">申시 · 오후3–5</option><option value="17">酉시 · 오후5–7</option>
+          <option value="19">戌시 · 저녁7–9</option><option value="21">亥시 · 밤9–11</option>
+        </select></div>
+    </div>
+    <div class="fg g2">
+      <div class="fld"><label>성별</label>
+        <select id="cg"><option value="">성별</option><option value="남">남</option><option value="여">여</option></select></div>
+      <div class="fld"><label>이름 (선택)</label><input type="text" id="cn" placeholder="상대 이름"></div>
+    </div>
+
+    <!-- 궁합 분석 항목 선택 -->
+    <div style="font-size:.62rem;color:var(--dim);letter-spacing:.06em;margin:14px 0 8px">
+      ◈ 분석 항목 선택 (복수 선택 가능)
+    </div>
+    <div class="chip-row">
+      <span class="chip on" data-compat="marriage" onclick="toggleChip(this)">💍 결혼 시기</span>
+      <span class="chip on" data-compat="child" onclick="toggleChip(this)">👶 자녀 운</span>
+      <span class="chip on" data-compat="harmony" onclick="toggleChip(this)">☯ 오행 궁합</span>
+      <span class="chip on" data-compat="daily" onclick="toggleChip(this)">🏠 일상 궁합</span>
+      <span class="chip on" data-compat="conflict" onclick="toggleChip(this)">⚡ 갈등 패턴</span>
+    </div>
+
+    <button class="btn btn-r" style="margin-top:4px" onclick="runCompatAnalysis()">
+      ♡ 트리니티 궁합 분석 시작
+    </button>
+  </div>
+
+  <!-- 결과 -->
+  <div id="compat-result-area" style="display:none">
+    <!-- 두 사람 비교 -->
+    <div class="card rline fu" id="compat-persons"></div>
+
+    <!-- 종합 스코어 -->
+    <div class="card rline fu">
+      <div class="ct r"><span>♡</span>궁합 종합 스코어</div>
+      <div style="text-align:center;padding:16px 0 12px">
+        <div class="score-ring" id="compat-ring">
+          <div class="ring-num" id="compat-score-num">—</div>
+          <div class="ring-lbl">점</div>
+        </div>
+        <div style="font-family:'Noto Serif KR',serif;font-size:.92rem;font-weight:600" id="compat-grade-lbl">—</div>
+      </div>
+      <div id="compat-score-bars"></div>
+    </div>
+
+    <!-- 상세 분석 -->
+    <div class="card rline fu">
+      <div class="ct r"><span>🌌</span>역술인 궁합 풀이</div>
+      <div id="compat-narr-out" class="rs-body">
+        <div style="text-align:center;padding:20px 0;color:var(--dim);font-size:.75rem">
+          분석 결과가 여기에 표시됩니다
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 💰 재물운 패널 -->
+<div class="ppanel" id="pp-wealth">
+  <div class="card gline fu" style="margin-top:14px">
+    <div class="ct g"><span>💰</span>재물운 분석 항목</div>
+    <div style="font-size:.72rem;color:var(--dim);margin-bottom:12px;line-height:1.7">
+      사주 입력 후 분석 항목을 선택하세요.<br>
+      항목별로 구체적인 전략을 안내해드립니다.
+    </div>
+    <div class="chip-row">
+      <span class="chip on" data-wealth="realestate" onclick="toggleChip(this)">🏘 부동산</span>
+      <span class="chip on" data-wealth="stock" onclick="toggleChip(this)">📈 주식·투자</span>
+      <span class="chip on" data-wealth="savings" onclick="toggleChip(this)">🏦 예금·적금</span>
+      <span class="chip on" data-wealth="timing" onclick="toggleChip(this)">⏰ 재물 시기</span>
+      <span class="chip on" data-wealth="region" onclick="toggleChip(this)">🗺 유리한 지역</span>
+    </div>
+    <button class="btn btn-g" onclick="runWealthAnalysis()">💰 재물운 풀이 시작</button>
+  </div>
+
+  <div id="wealth-result-area" style="display:none">
+    <div class="card gline fu">
+      <div class="ct g"><span>🌌</span>재물운 역술 풀이</div>
+      <div id="wealth-narr-out" class="rs-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 🎯 직업&학업운 패널 -->
+<div class="ppanel" id="pp-career">
+  <div class="card jline fu" style="margin-top:14px">
+    <div class="ct j"><span>🎯</span>직업·학업 분석 항목</div>
+    <div style="font-size:.72rem;color:var(--dim);margin-bottom:12px;line-height:1.7">
+      현재 상황을 선택하면 맞춤 분석을 제공합니다.
+    </div>
+
+    <!-- 현재 상황 -->
+    <div style="font-size:.62rem;color:var(--dim);letter-spacing:.06em;margin-bottom:8px">현재 상황</div>
+    <div class="chip-row" id="career-status-chips">
+      <span class="chip jade-chip on" data-status="student" onclick="toggleCareerStatus(this)">📚 학생·수험</span>
+      <span class="chip jade-chip" data-status="employed" onclick="toggleCareerStatus(this)">💼 직장인</span>
+      <span class="chip jade-chip" data-status="business" onclick="toggleCareerStatus(this)">🏢 창업·사업</span>
+      <span class="chip jade-chip" data-status="change" onclick="toggleCareerStatus(this)">🔄 이직·전환</span>
+    </div>
+
+    <!-- 분석 항목 -->
+    <div style="font-size:.62rem;color:var(--dim);letter-spacing:.06em;margin-bottom:8px;margin-top:4px">분석 항목</div>
+    <div class="chip-row">
+      <span class="chip jade-chip on" data-career="aptitude" onclick="toggleChip(this)">🌱 적성·재능</span>
+      <span class="chip jade-chip on" data-career="field" onclick="toggleChip(this)">🎓 유망 분야</span>
+      <span class="chip jade-chip on" data-career="growth" onclick="toggleChip(this)">📈 성장 경로</span>
+      <span class="chip jade-chip on" data-career="timing" onclick="toggleChip(this)">⏰ 중요 시기</span>
+      <span class="chip jade-chip on" data-career="style" onclick="toggleChip(this)">🧭 업무 스타일</span>
+    </div>
+
+    <!-- 직업 입력 (선택) -->
+    <div class="fld" style="margin-top:8px">
+      <label>현재 직업·관심 분야 <span style="opacity:.5">(선택 — 더 구체적인 분석)</span></label>
+      <input type="text" id="career-input" placeholder="예: 교사, 개발자, 의대 준비 등">
+    </div>
+
+    <button class="btn btn-j" style="margin-top:12px" onclick="runCareerAnalysis()">🎯 직업·학업운 풀이 시작</button>
+  </div>
+
+  <div id="career-result-area" style="display:none">
+    <div class="card jline fu">
+      <div class="ct j"><span>🌌</span>직업·학업운 역술 풀이</div>
+      <div id="career-narr-out" class="rs-body"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- wrap -->
+<script>
+/* ═══════════════════════════════════════════
+   만세력 — 절기 보정
+═══════════════════════════════════════════ */
+const JEOLGI={1:['소한',6,11],2:['입춘',4,0],3:['경칩',6,1],4:['청명',5,2],
+  5:['입하',6,3],6:['망종',6,4],7:['소서',7,5],8:['입추',7,6],
+  9:['백로',8,7],10:['한로',8,8],11:['입동',7,9],12:['대설',7,10]};
+const WJ_LIST=['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'];
+
+function getWolji(y,m,d){
+  const [jn,jd,wi]=JEOLGI[m];
+  if(d<jd){
+    const pm=m===1?12:m-1;const[,,pwi]=JEOLGI[pm];
+    return{ji:WJ_LIST[pwi],jn,jd,before:true};
+  }
+  return{ji:WJ_LIST[wi],jn,jd,before:false};
+}
+
+const CG=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const JJ=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const CGD={'甲':{oh:'목',yn:'양'},'乙':{oh:'목',yn:'음'},'丙':{oh:'화',yn:'양'},'丁':{oh:'화',yn:'음'},
+  '戊':{oh:'토',yn:'양'},'己':{oh:'토',yn:'음'},'庚':{oh:'금',yn:'양'},'辛':{oh:'금',yn:'음'},
+  '壬':{oh:'수',yn:'양'},'癸':{oh:'수',yn:'음'}};
+const JJD={'子':{oh:'수'},'丑':{oh:'토'},'寅':{oh:'목'},'卯':{oh:'목'},'辰':{oh:'토'},'巳':{oh:'화'},
+  '午':{oh:'화'},'未':{oh:'토'},'申':{oh:'금'},'酉':{oh:'금'},'戌':{oh:'토'},'亥':{oh:'수'}};
+const OHB={목:'#40a858',화:'#c84040',토:'#b88818',금:'#7898b0',수:'#2858a8'};
+const OHC={목:'ow',화:'of',토:'oe',금:'om',수:'ou'};
+const BGC={목:'bw',화:'bf',토:'be',금:'bm',수:'bu'};
+
+const WGT={'甲':['丙','丁','戊','己','庚','辛','壬','癸','甲','乙','丙','丁'],
+  '乙':['戊','己','庚','辛','壬','癸','甲','乙','丙','丁','戊','己'],
+  '丙':['庚','辛','壬','癸','甲','乙','丙','丁','戊','己','庚','辛'],
+  '丁':['壬','癸','甲','乙','丙','丁','戊','己','庚','辛','壬','癸'],
+  '戊':['甲','乙','丙','丁','戊','己','庚','辛','壬','癸','甲','乙'],
+  '己':['丙','丁','戊','己','庚','辛','壬','癸','甲','乙','丙','丁'],
+  '庚':['戊','己','庚','辛','壬','癸','甲','乙','丙','丁','戊','己'],
+  '辛':['庚','辛','壬','癸','甲','乙','丙','丁','戊','己','庚','辛'],
+  '壬':['壬','癸','甲','乙','丙','丁','戊','己','庚','辛','壬','癸'],
+  '癸':['甲','乙','丙','丁','戊','己','庚','辛','壬','癸','甲','乙']};
+
+function getYG(y){return CG[(y-4)%10];}
+function getYJ(y){return JJ[(y-4)%12];}
+function getWG(yg,wj){const i=WJ_LIST.indexOf(wj);return WGT[yg][i];}
+function getIG(y,m,d){const b=new Date(1900,0,1),t=new Date(y,m-1,d);return CG[((Math.floor((t-b)/86400000))%10+10)%10];}
+function getIJ(y,m,d){const b=new Date(1900,0,1),t=new Date(y,m-1,d);return JJ[(Math.floor((t-b)/86400000)%12+12)%12];}
+const SGT={'甲':['甲','乙','丙','丁','戊','己','庚','辛','壬','癸','甲','乙'],
+  '乙':['丙','丁','戊','己','庚','辛','壬','癸','甲','乙','丙','丁'],
+  '丙':['戊','己','庚','辛','壬','癸','甲','乙','丙','丁','戊','己'],
+  '丁':['庚','辛','壬','癸','甲','乙','丙','丁','戊','己','庚','辛'],
+  '戊':['壬','癸','甲','乙','丙','丁','戊','己','庚','辛','壬','癸'],
+  '己':['甲','乙','丙','丁','戊','己','庚','辛','壬','癸','甲','乙'],
+  '庚':['丙','丁','戊','己','庚','辛','壬','癸','甲','乙','丙','丁'],
+  '辛':['戊','己','庚','辛','壬','癸','甲','乙','丙','丁','戊','己'],
+  '壬':['庚','辛','壬','癸','甲','乙','丙','丁','戊','己','庚','辛'],
+  '癸':['壬','癸','甲','乙','丙','丁','戊','己','庚','辛','壬','癸']};
+function getSG(ig,h){return SGT[ig][h===23?0:Math.floor(h/2)+1];}
+function getSJ(h){if(h===23)return '子';return JJ[Math.floor(h/2)+1]||JJ[0];}
+
+/* ═══ 신살 ═══ */
+const CUG={'甲':['丑','未'],'乙':['子','申'],'丙':['亥','酉'],'丁':['亥','酉'],
+  '戊':['丑','未'],'己':['子','申'],'庚':['丑','未'],'辛':['寅','午'],'壬':['卯','巳'],'癸':['卯','巳']};
+const WDG={'寅':['丙'],'卯':['甲'],'辰':['壬'],'巳':['庚'],'午':['丙'],'未':['甲'],
+  '申':['壬'],'酉':['庚'],'戌':['丙'],'亥':['甲'],'子':['壬'],'丑':['庚']};
+const TDG={'寅':['丁'],'卯':['申'],'辰':['壬'],'巳':['辛'],'午':['亥'],'未':['甲'],
+  '申':['癸'],'酉':['寅'],'戌':['丙'],'亥':['乙'],'子':['巳'],'丑':['庚']};
+const MCG={'甲':['巳'],'乙':['午'],'丙':['申'],'丁':['酉'],'戊':['申'],'己':['酉'],
+  '庚':['亥'],'辛':['子'],'壬':['寅'],'癸':['卯']};
+const DHJ={'子':['酉'],'丑':['午'],'寅':['卯'],'卯':['子'],'辰':['酉'],'巳':['午'],
+  '午':['卯'],'未':['子'],'申':['酉'],'酉':['午'],'戌':['卯'],'亥':['子']};
+const YMJ={'子':['寅'],'丑':['亥'],'寅':['申'],'卯':['巳'],'辰':['寅'],'巳':['亥'],
+  '午':['申'],'未':['巳'],'申':['寅'],'酉':['亥'],'戌':['申'],'亥':['巳']};
+const BHP=[['甲','辰'],['乙','未'],['丙','戌'],['丁','丑'],['戊','辰'],['庚','辰'],['辛','未'],['壬','戌'],['癸','丑']];
+const SSI={'천을귀인':{t:'g',d:'어려울 때 귀인이 나타나는 복. 관운과 사회적 신뢰가 높다.'},
+  '월덕귀인':{t:'g',d:'재난과 형액을 막아주는 보호막. 인덕이 두텁다.'},
+  '천덕귀인':{t:'g',d:'관재·구설을 해소하는 천상의 가호. 삶 전반의 보호막.'},
+  '문창귀인':{t:'g',d:'시험·학문·계약에 유리한 지성의 귀인.'},
+  '금여록':{t:'g',d:'배우자 복과 재물 복이 따르는 길성.'},
+  '도화살':{t:'s',d:'이성에게 인기가 많으나 색정·낭비 주의.'},
+  '역마살':{t:'s',d:'여행·이동·변화가 잦은 운. 정착이 어렵다.'},
+  '백호대살':{t:'s',d:'사고·수술 위험이 있으나 의료·법조에서 유리.'},
+  '화개살':{t:'i',d:'예술·영성·철학의 재능. 창의력이 탁월하다.'}};
+
+function calcSS(ig,ij,wj,yj,yg){
+  const r={};const jM={연지:yj,월지:wj,일지:ij};const gM={연간:yg,일간:ig};
+  (CUG[ig]||[]).forEach(t=>Object.entries(jM).forEach(([p,j])=>{if(j===t)(r['천을귀인']||(r['천을귀인']=[])).push(p);}));
+  (WDG[wj]||[]).forEach(t=>Object.entries(gM).forEach(([p,g])=>{if(g===t)(r['월덕귀인']||(r['월덕귀인']=[])).push(p);}));
+  (TDG[wj]||[]).forEach(t=>[...Object.entries(gM),...Object.entries(jM)].forEach(([p,c])=>{if(c===t)(r['천덕귀인']||(r['천덕귀인']=[])).push(p);}));
+  (MCG[ig]||[]).forEach(t=>Object.entries(jM).forEach(([p,j])=>{if(j===t)(r['문창귀인']||(r['문창귀인']=[])).push(p);}));
+  (DHJ[ij]||[]).forEach(t=>['연지','월지'].forEach(p=>{const j=p==='연지'?yj:wj;if(j===t)(r['도화살']||(r['도화살']=[])).push(p);}));
+  (YMJ[ij]||[]).forEach(t=>['연지','월지'].forEach(p=>{const j=p==='연지'?yj:wj;if(j===t)(r['역마살']||(r['역마살']=[])).push(p);}));
+  if(BHP.some(([g,j])=>g===ig&&j===ij))r['백호대살']=['일주'];
+  return r;
+}
+
+/* ═══════════════════════════════════════════
+   별자리 데이터
+═══════════════════════════════════════════ */
+const ZD={
+  '양자리':{sym:'♈',el:'불',qual:'활동',key:'개척·열정·독립',traits:['외향','직관','감정표현','즉흥'],oh:'화'},
+  '황소자리':{sym:'♉',el:'흙',qual:'고정',key:'안정·감각·인내',traits:['내향','감각','현실','계획'],oh:'토'},
+  '쌍둥이자리':{sym:'♊',el:'바람',qual:'변동',key:'소통·지성·호기심',traits:['외향','직관','분석','즉흥'],oh:'목'},
+  '게자리':{sym:'♋',el:'물',qual:'활동',key:'감성·보호·직관',traits:['내향','감정','직관','계획'],oh:'수'},
+  '사자자리':{sym:'♌',el:'불',qual:'고정',key:'창조·자신감·리더',traits:['외향','직관','감정표현','계획'],oh:'화'},
+  '처녀자리':{sym:'♍',el:'흙',qual:'변동',key:'분석·완벽·실용',traits:['내향','감각','분석','계획'],oh:'토'},
+  '천칭자리':{sym:'♎',el:'바람',qual:'활동',key:'조화·균형·심미',traits:['외향','직관','감정','즉흥'],oh:'목'},
+  '전갈자리':{sym:'♏',el:'물',qual:'고정',key:'변형·집중·통찰',traits:['내향','직관','감정','계획'],oh:'수'},
+  '궁수자리':{sym:'♐',el:'불',qual:'변동',key:'자유·탐구·철학',traits:['외향','직관','분석','즉흥'],oh:'화'},
+  '염소자리':{sym:'♑',el:'흙',qual:'활동',key:'목표·인내·책임',traits:['내향','감각','분석','계획'],oh:'토'},
+  '물병자리':{sym:'♒',el:'바람',qual:'고정',key:'혁신·독창·인류',traits:['외향','직관','분석','즉흥'],oh:'목'},
+  '물고기자리':{sym:'♓',el:'물',qual:'변동',key:'공감·직관·예술',traits:['내향','직관','감정','즉흥'],oh:'수'},
+};
+const ZEL_COL={불:'#c84040',흙:'#c09020',바람:'#48a0b8',물:'#2858a8'};
+
+/* ═══════════════════════════════════════════
+   MBTI 데이터 — 인지기능 스택
+═══════════════════════════════════════════ */
+const MBTI_STACK={
+  ISTJ:{stack:['Si','Te','Fi','Ne'],key:'신뢰·책임·체계·전통'},ISFJ:{stack:['Si','Fe','Ti','Ne'],key:'돌봄·헌신·조화·기억'},
+  INFJ:{stack:['Ni','Fe','Ti','Se'],key:'통찰·이상·공감·비전'},INTJ:{stack:['Ni','Te','Fi','Se'],key:'전략·독립·완벽·비전'},
+  ISTP:{stack:['Ti','Se','Ni','Fe'],key:'분석·도구·관찰·유연'},ISFP:{stack:['Fi','Se','Ni','Te'],key:'감성·자유·현재·예술'},
+  INFP:{stack:['Fi','Ne','Si','Te'],key:'이상·공감·창의·진정성'},INTP:{stack:['Ti','Ne','Si','Fe'],key:'논리·탐구·독창·분석'},
+  ESTP:{stack:['Se','Ti','Fe','Ni'],key:'행동·현실·순발력·관찰'},ESFP:{stack:['Se','Fi','Te','Ni'],key:'활력·즐거움·현재·따뜻함'},
+  ENFP:{stack:['Ne','Fi','Te','Si'],key:'열정·창의·가능성·공감'},ENTP:{stack:['Ne','Ti','Fe','Si'],key:'혁신·논리·도전·탐구'},
+  ESTJ:{stack:['Te','Si','Ne','Fi'],key:'조직·리더십·체계·책임'},ESFJ:{stack:['Fe','Si','Ne','Ti'],key:'조화·돌봄·사교·전통'},
+  ENFJ:{stack:['Fe','Ni','Se','Ti'],key:'리더십·공감·비전·연결'},ENTJ:{stack:['Te','Ni','Se','Fi'],key:'전략·결단·목표·리더'},
+};
+// MBTI → 성격 벡터 (E/I, N/S, F/T, P/J 로 변환)
+function mbtiToVec(s){
+  return{
+    ei:s[0]==='E'?'E':'I',
+    sn:s[1]==='N'?'N':'S',
+    tf:s[2]==='F'?'F':'T',
+    jp:s[3]==='J'?'J':'P',
+  };
+}
+
+/* ═══════════════════════════════════════════
+   오행 → 성격 벡터 변환
+═══════════════════════════════════════════ */
+function ohToVec(oh){
+  // 오행별 MBTI 경향성 매핑 (연구 기반)
+  const map={
+    목:{ei:'E',sn:'N',tf:'F',jp:'P',traits:['창의','성장','직관','표현','사교']},
+    화:{ei:'E',sn:'N',tf:'F',jp:'J',traits:['열정','리더십','표현','추진','감정']},
+    토:{ei:'I',sn:'S',tf:'T',jp:'J',traits:['현실','안정','신뢰','실용','책임']},
+    금:{ei:'I',sn:'S',tf:'T',jp:'J',traits:['분석','원칙','완벽','결단','논리']},
+    수:{ei:'I',sn:'N',tf:'F',jp:'P',traits:['직관','깊이','공감','창조','통찰']},
+  };
+  return map[oh]||map.토;
+}
+
+// 별자리 원소 → 성격 벡터
+function elToVec(el){
+  const map={
+    불:{ei:'E',sn:'N',traits:['열정','즉흥','표현','에너지','추진']},
+    흙:{ei:'I',sn:'S',traits:['현실','안정','인내','실용','감각']},
+    바람:{ei:'E',sn:'N',traits:['소통','지성','사교','아이디어','변화']},
+    물:{ei:'I',sn:'N',traits:['감성','직관','공감','깊이','예술']},
+  };
+  return map[el]||map.흙;
+}
+
+/* ═══════════════════════════════════════════
+   핵심 수렴/상충 알고리즘
+═══════════════════════════════════════════ */
+function buildSignalMap(sajuData, zodiacData, mbtiStr, weights) {
+  if(!sajuData||!zodiacData.sun||!mbtiStr) return null;
+
+  const ws=parseInt(weights.s)||40;
+  const wz=parseInt(weights.z)||25;
+  const wm=parseInt(weights.m)||35;
+  const total=ws+wz+wm;
+  const nws=ws/total,nwz=wz/total,nwm=wm/total;
+
+  // 각 시스템에서 벡터 추출
+  const ig=sajuData.ig;
+  const igOh=CGD[ig]?.oh||'토';
+
+  // 오행 분포에서 주도 오행 찾기
+  const ohC={목:0,화:0,토:0,금:0,수:0};
+  [[sajuData.yg,CGD],[sajuData.yj,JJD],[sajuData.wg,CGD],[sajuData.wj,JJD],[sajuData.ig,CGD],[sajuData.ij,JJD]]
+    .forEach(([c,map])=>{if(c&&map[c])ohC[map[c].oh]++;});
+  const sortedOh=Object.entries(ohC).sort((a,b)=>b[1]-a[1]);
+  const topOh=sortedOh[0][0];
+  const secOh=sortedOh[1][0];
+
+  const sajuVec=ohToVec(topOh); // 주도 오행 기준
+  const igVec=ohToVec(igOh);    // 일간 기준
+
+  const sunZ=zodiacData.sun;const moonZ=zodiacData.moon;const ascZ=zodiacData.asc;
+  const sunD=ZD[sunZ]||{};const moonD=ZD[moonZ]||{};const ascD=ZD[ascZ]||{};
+  const sunEl=sunD.el||'';
+  const elVec=elToVec(sunEl);
+
+  const mbtiVec=mbtiToVec(mbtiStr);
+
+  // ── E/I 수렴 계산 ──
+  const saju_EI = igVec.ei; // 일간 기준 (더 정확)
+  const z_EI = elVec.ei;
+  const m_EI = mbtiVec.ei;
+
+  const eiVotes=[
+    {val:saju_EI, w:nws, src:'사주'},
+    {val:z_EI, w:nwz, src:'별자리'},
+    {val:m_EI, w:nwm, src:'MBTI'},
+  ];
+  const eiScore=calcSignalScore(eiVotes, m_EI); // MBTI 기준으로 수렴도 계산
+
+  // ── S/N 수렴 ──
+  const saju_SN=['목','수'].includes(topOh)?'N':'S';
+  const z_SN=['불','바람'].includes(sunEl)?'N':'S';
+  const m_SN=mbtiVec.sn;
+  const snVotes=[{val:saju_SN,w:nws,src:'사주'},{val:z_SN,w:nwz,src:'별자리'},{val:m_SN,w:nwm,src:'MBTI'}];
+  const snScore=calcSignalScore(snVotes, m_SN);
+
+  // ── T/F 수렴 ──
+  const saju_TF=['금','토'].includes(topOh)?'T':'F';
+  const z_TF=['흙','바람'].includes(sunEl)?'T':'F';
+  const m_TF=mbtiVec.tf;
+  const tfVotes=[{val:saju_TF,w:nws,src:'사주'},{val:z_TF,w:nwz,src:'별자리'},{val:m_TF,w:nwm,src:'MBTI'}];
+  const tfScore=calcSignalScore(tfVotes, m_TF);
+
+  // ── J/P 수렴 ──
+  const saju_JP=['화','토','금'].includes(topOh)?'J':'P';
+  const z_JP=['고정','활동'].includes(sunD.qual||'')?'J':'P';
+  const m_JP=mbtiVec.jp;
+  const jpVotes=[{val:saju_JP,w:nws,src:'사주'},{val:z_JP,w:nwz,src:'별자리'},{val:m_JP,w:nwm,src:'MBTI'}];
+  const jpScore=calcSignalScore(jpVotes, m_JP);
+
+  const overall=Math.round((eiScore+snScore+tfScore+jpScore)/4);
+
+  // ── 트레잇 수렴 분석 ──
+  const sajuTraits=sajuVec.traits||[];
+  const zTraits=[...elVec.traits||[],...(moonD.traits||[]),...(sunD.traits||[])];
+  const mbtiD=MBTI_STACK[mbtiStr]||{};
+  const mbtiTraits=(mbtiD.key||'').split('·');
+
+  // 교집합 찾기 (시맨틱 유사도 기반)
+  const convergent=findConvergentTraits(sajuTraits,zTraits,mbtiTraits);
+  const tensionTraits=findTensionTraits(sajuTraits,zTraits,mbtiTraits,convergent);
+
+  return{
+    eiScore,snScore,tfScore,jpScore,overall,
+    saju:{vec:sajuVec,igVec,igOh,topOh,secOh,ohC},
+    zodiac:{sunD,moonD,ascD,elVec,sunEl},
+    mbti:{vec:mbtiVec,stack:mbtiD},
+    convergent,tensionTraits,
+    votes:{ei:eiVotes,sn:snVotes,tf:tfVotes,jp:jpVotes},
+    weights:{s:nws,z:nwz,m:nwm},
+  };
+}
+
+function calcSignalScore(votes, target) {
+  let agree=0;
+  votes.forEach(v=>{if(v.val===target)agree+=v.w;});
+  return Math.round(agree*100);
+}
+
+// 의미론적 트레잇 그룹 (유사한 개념들)
+const TRAIT_GROUPS=[
+  {key:'창의성',tags:['창의','직관','아이디어','가능성','상상','예술','독창']},
+  {key:'감성',tags:['감정','공감','감성','따뜻함','돌봄','헌신','배려']},
+  {key:'외향성',tags:['사교','외향','활력','소통','표현','에너지','열정','즉흥']},
+  {key:'내향성',tags:['내향','깊이','통찰','분석','독립','조용','신중']},
+  {key:'논리성',tags:['분석','논리','원칙','체계','완벽','결단','전략']},
+  {key:'현실성',tags:['현실','감각','실용','안정','책임','전통','인내']},
+  {key:'추진력',tags:['리더십','추진','목표','결단','도전','계획','조직']},
+  {key:'자유분방',tags:['자유','즉흥','변화','호기심','탐구','유연','다양']},
+];
+
+function findConvergentTraits(t1, t2, t3) {
+  const result=[];
+  TRAIT_GROUPS.forEach(g=>{
+    const cnt=[t1,t2,t3].filter(arr=>arr.some(t=>g.tags.some(tag=>t.includes(tag)||tag.includes(t)))).length;
+    if(cnt>=2)result.push({key:g.key,score:cnt,tags:g.tags.filter(tag=>[...t1,...t2,...t3].some(t=>t.includes(tag)||tag.includes(t)))});
+  });
+  return result.sort((a,b)=>b.score-a.score);
+}
+
+function findTensionTraits(t1, t2, t3, convergent) {
+  // 수렴된 것의 반대 개념이 다른 시스템에 있는지 확인
+  const tensions=[];
+  const OPPOSITES={'창의성':'논리성','외향성':'내향성','감성':'논리성','자유분방':'추진력','현실성':'창의성'};
+  convergent.forEach(c=>{
+    const opp=OPPOSITES[c.key];
+    if(!opp)return;
+    const oppGroup=TRAIT_GROUPS.find(g=>g.key===opp);
+    if(!oppGroup)return;
+    const found=[t1,t2,t3].filter(arr=>arr.some(t=>oppGroup.tags.some(tag=>t.includes(tag)||tag.includes(t))));
+    if(found.length>=1)tensions.push({from:c.key,to:opp});
+  });
+  return tensions;
+}
+
+/* ═══════════════════════════════════════════
+   내러티브 생성 엔진 — "사람처럼 말하기"
+═══════════════════════════════════════════ */
+const NAME_TEMPLATES={
+  // [이름] 자리에 실제 이름 삽입
+  intro_patterns:[
+    '{n}님은 {key1}과 {key2}가 동시에 공존하는 복합적인 사람이에요.',
+    '한마디로 {n}님을 표현하자면, {key1}를 품은 {key2}형 사람이에요.',
+    '{n}님의 내면을 들여다보면 {key1}이 핵심에 있고, 그 위로 {key2}가 덧입혀져 있어요.',
+  ],
+  convergence_opener:[
+    '세 가지 시스템이 모두 같은 방향을 가리킬 때, 그건 진짜예요.',
+    '사주도, 별자리도, 그리고 스스로 선택한 MBTI도 같은 말을 하고 있어요.',
+    '흥미롭게도 동양과 서양, 그리고 현대 심리학이 {n}님에 대해 같은 이야기를 해요.',
+  ],
+  tension_bridge:[
+    '다만 한 가지 흥미로운 점이 있어요.',
+    '여기서 조금 복잡한 부분이 있는데,',
+    '그런데 {n}님 안에는 그것과 조금 다른 면도 있어요.',
+  ],
+};
+
+function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function sb(types){ // source badge html
+  return types.map(t=>{
+    if(t==='사주')return'<span class="sb sb-g">☯사주</span>';
+    if(t==='별자리')return'<span class="sb sb-j">☽별자리</span>';
+    if(t==='MBTI')return'<span class="sb sb-i">✦MBTI</span>';
+    return'';
+  }).join('');
+}
+
+function buildCoreNarrative(sig, name) {
+  const n=name||'당신';
+  const {saju,zodiac,mbti,convergent,tensionTraits,votes,eiScore,snScore,tfScore,jpScore}=sig;
+
+  const topC=convergent[0]?.key||'균형';
+  const secC=convergent[1]?.key||'통찰';
+
+  // 도입부 — 핵심 성격 선언
+  const intro=pickRandom(NAME_TEMPLATES.intro_patterns)
+    .replace(/{n}/g,n).replace(/{key1}/g,topC).replace(/{key2}/g,secC);
+
+  // 수렴 항목 생성
+  const convItems=convergent.slice(0,3).map(c=>{
+    const sources=[];
+    const hasSaju=saju.vec.traits?.some(t=>c.tags.some(tag=>t.includes(tag)||tag.includes(t)));
+    const hasZ=zodiac.elVec.traits?.some(t=>c.tags.some(tag=>t.includes(tag)||tag.includes(t)));
+    const hasM=(mbti.stack.key||'').split('·').some(t=>c.tags.some(tag=>t.includes(tag)||tag.includes(t)));
+    if(hasSaju)sources.push('사주');if(hasZ)sources.push('별자리');if(hasM)sources.push('MBTI');
+
+    const texts={
+      '창의성':`${n}님에게 창의성은 선택이 아니라 본능이에요. 문제를 봤을 때 정해진 방법보다 새로운 방식을 먼저 떠올리고, 남들이 당연하게 받아들이는 것에 '왜?'라는 질문을 던지는 사람이에요.`,
+      '감성':`${n}님은 감정의 결을 세밀하게 느끼는 사람이에요. 상대의 표정 변화나 분위기를 금방 알아채고, 말로 표현되지 않은 감정까지 읽어내는 능력이 있어요. 이 감수성이 때로는 깊은 상처가 되기도 하지만, 동시에 가장 큰 강점이기도 해요.`,
+      '외향성':`${n}님은 사람들 속에서 에너지를 얻어요. 혼자 있으면 생각이 너무 많아지고, 대화하면서 아이디어가 정리되는 스타일이에요. 처음 만나는 사람에게도 자연스럽게 다가가는 편이고, 주변에 활기를 불어넣는 역할을 자연스럽게 해요.`,
+      '내향성':`${n}님은 혼자만의 시간이 진짜 충전이에요. 북적이는 환경에서도 잘 지낼 수 있지만, 돌아왔을 때 조용한 공간이 필요해요. 깊이 없는 대화보다 한 사람과 제대로 이야기하는 게 훨씬 편하고, 그래서 관계의 폭은 좁아도 깊이는 남다른 경우가 많아요.`,
+      '논리성':`${n}님은 감정보다 근거를 먼저 찾아요. '왜 그렇게 생각하세요?'라는 질문이 자연스럽게 나오고, 논리에 구멍이 보이면 불편함을 느껴요. 이 성향 덕분에 복잡한 문제를 차갑게 분석하는 능력이 있어요.`,
+      '현실성':`${n}님은 실제로 작동하는 것을 신뢰해요. 거창한 이상보다 지금 당장 실행 가능한 것에 집중하고, 검증된 방법을 선호해요. 이게 때로는 보수적으로 보일 수 있지만, 그 덕분에 실수가 적고 신뢰를 쌓는 속도가 빨라요.`,
+      '추진력':`${n}님은 목표를 세우면 실제로 움직이는 사람이에요. 생각만 하다가 끝내는 스타일이 아니라 어떻게든 행동으로 옮겨요. 주변에서 '어떻게 그걸 다 해?'라는 말을 들어본 적 있을 거예요.`,
+      '자유분방':`${n}님은 틀에 갇히는 걸 본능적으로 거부해요. 스케줄이 너무 빽빽하거나 선택지가 없을 때 답답함을 느끼고, 예상치 못한 변화에 오히려 흥미를 느끼는 편이에요.`,
+    };
+    return{text:texts[c.key]||`${n}님의 핵심 특성 중 하나는 ${c.key}예요.`,sources,score:c.score};
+  });
+
+  // 상충 해석
+  const tensionTexts=tensionTraits.slice(0,1).map(t=>{
+    const bridge=pickRandom(NAME_TEMPLATES.tension_bridge).replace(/{n}/g,n);
+    const texts={
+      '창의성→논리성':`${bridge} ${n}님은 기본적으로 창의적이지만, 동시에 그 창의성이 실제로 효과가 있는지 따지는 비판적인 눈도 가지고 있어요. 아이디어를 내면서도 "이게 진짜 될까?"를 동시에 생각하는 거예요. 이 두 가지가 충돌할 때 결정이 느려지기도 하지만, 오히려 공상에만 그치지 않는 현실적인 창의성이 나오기도 해요.`,
+      '외향성→내향성':`${bridge} ${n}님에게는 사람들과 어울리고 싶은 마음과, 혼자 조용히 있고 싶은 마음이 동시에 있어요. 에너지 넘치게 사람들 속에 있다가도 갑자기 사라지고 싶어지는 패턴을 경험해봤을 거예요. 이게 변덕이 아니라, ${n}님의 내면에 외향과 내향이 공존하는 구조예요.`,
+      '감성→논리성':`${bridge} ${n}님은 마음으로는 깊이 공감하면서도, 머리로는 냉철하게 분석하고 싶어해요. 감정적으로 흔들리면서도 '내가 왜 이러지?'라며 스스로를 분석하는 이중적인 면이 있어요. 이 긴장이 ${n}님을 복잡하게 만들기도 하지만, 감정과 이성을 모두 갖춘 입체적인 사람으로 만들어줘요.`,
+      '자유분방→추진력':`${bridge} 자유롭게 흘러가고 싶은 마음과, 목표를 세우고 완수하고 싶은 마음이 동시에 있어요. 계획 세우는 게 싫으면서도 성취하고 싶은 욕구가 강한, 조금 모순적인 조합이에요.`,
+    };
+    const key=`${t.from}→${t.to}`;
+    return texts[key]||`${bridge} 한편으로는 ${t.from}적인 면이 있지만, 동시에 ${t.to}적인 면도 있어요.`;
+  });
+
+  return{intro,convItems,tensionTexts};
+}
+
+function buildStrengthNarrative(sig, name) {
+  const n=name||'당신';
+  const {convergent,saju,zodiac,mbti}=sig;
+  const topOh=saju.topOh;
+  const sunZ=zodiac.sunD;
+  const mbtiStr=[mbti.vec.ei,mbti.vec.sn,mbti.vec.tf,mbti.vec.jp].join('');
+
+  // 오행별 강점 설명
+  const ohStr={
+    목:`${n}님의 가장 큰 강점은 성장하는 힘이에요. 막혀도 틈을 찾아 뚫고 나오는 나무처럼, 어떤 상황에서도 가능성을 보는 눈이 있어요. 창의적인 환경이나 자유가 주어졌을 때 놀라운 결과물이 나와요.`,
+    화:`${n}님의 가장 큰 강점은 에너지와 열정이에요. 하고 싶은 일을 만나면 주변까지 불태울 만큼의 동력이 있고, 이 에너지가 사람들을 끌어당기는 힘이 있어요. 리더십이 필요한 상황에서 자연스럽게 앞에 서게 되는 사람이에요.`,
+    토:`${n}님의 가장 큰 강점은 신뢰할 수 있다는 거예요. 말한 건 지키고, 시작한 건 마무리하는 사람이라는 게 주변에 쌓이면 그 자체로 강력한 자산이 돼요. 조용하지만 가장 든든한 존재예요.`,
+    금:`${n}님의 가장 큰 강점은 날카로운 판단력이에요. 복잡한 상황을 빠르게 정리하고, 핵심을 꿰뚫는 분석력이 있어요. 감정에 휩쓸리지 않고 냉철하게 결정을 내릴 수 있는 사람이에요.`,
+    수:`${n}님의 가장 큰 강점은 깊이와 통찰력이에요. 표면만 보는 게 아니라 그 아래를 보는 눈이 있고, 말하지 않아도 상황의 흐름을 읽는 감각이 있어요. 위기일 때 진가가 드러나는 타입이에요.`,
+  };
+
+  // 주의할 점 — 상충에서 추출
+  const cautions={
+    목:`다만 한 가지 조심할 점은 산만해질 수 있다는 거예요. 동시에 여러 가지를 시작하다가 정작 마무리를 못하는 패턴이 생기기 쉬워요.`,
+    화:`다만 가끔 에너지가 앞서 나머지를 소진시킬 수 있어요. 뜨겁게 시작했다가 빠르게 식어버리거나, 주변 사람을 지치게 만드는 경우가 생겨요.`,
+    토:`다만 변화가 느릴 수 있어요. 안정을 추구하다 보면 새로운 시도를 늦게 하거나, 기회를 놓치는 상황이 생길 수 있어요.`,
+    금:`다만 완벽주의가 자신을 가장 힘들게 할 수 있어요. 기준이 높아서 스스로에게도, 가끔은 주변에게도 너무 많은 걸 요구하는 패턴이 생겨요.`,
+    수:`다만 현실적인 행동으로 연결되는 게 어려울 수 있어요. 통찰과 감각은 뛰어나지만, 그걸 실제 결과물로 만드는 과정에서 막히는 경우가 있어요.`,
+  };
+
+  return{strength:ohStr[topOh]||'',caution:cautions[topOh]||''};
+}
+
+function buildRelationNarrative(sig, name) {
+  const n=name||'당신';
+  const {saju,zodiac,mbti,convergent}=sig;
+  const ig=saju.ig;
+  const igOh=saju.igOh;
+  const sunZ=zodiac.sunD;
+  const m=mbti.vec;
+
+  const feelingType=m.tf==='F';
+  const introvert=m.ei==='I';
+  const intuitive=m.sn==='N';
+
+  // 연애 스타일 조합
+  let loveStyle='';
+  if(feelingType&&introvert){
+    loveStyle=`${n}님의 사랑은 조용하고 깊어요. 처음에는 천천히 마음을 열지만, 한 번 열면 깊이 헌신하는 타입이에요. 표현이 서툴 수 있어서 상대가 당연하게 여기는 걸 걱정하는 경우가 있어요.`;
+  } else if(feelingType&&!introvert){
+    loveStyle=`${n}님의 사랑은 적극적이고 따뜻해요. 좋아하면 표현하고, 상대가 기뻐하는 걸 보는 게 행복이에요. 다만 지나치게 상대에게 맞추다가 자신을 잃는 경우를 조심해야 해요.`;
+  } else if(!feelingType&&introvert){
+    loveStyle=`${n}님은 사랑도 논리적으로 접근하는 편이에요. 감정보다 행동으로 마음을 표현하고, 상대의 문제를 해결해주고 싶어해요. 감정 표현을 요구받을 때 불편함을 느낄 수 있어요.`;
+  } else {
+    loveStyle=`${n}님은 사랑에서도 주도권을 갖고 싶은 편이에요. 열정적이고 직접적이지만, 감정적인 갈등 상황에서 차갑게 느껴질 수 있어요.`;
+  }
+
+  // 별자리 연애 특성 추가
+  const zLove={
+    불:`${sunZ.sym||''} ${Object.keys(ZD).find(k=>ZD[k]===sunZ)||''}자리의 영향으로 연애에서도 열정적인 면이 있어요. 처음의 강렬함을 유지하는 게 숙제예요.`,
+    흙:`${sunZ.sym||''} ${Object.keys(ZD).find(k=>ZD[k]===sunZ)||''}자리의 영향으로 안정적인 관계를 원해요. 화려함보다는 일상에서 함께하는 편안함을 더 소중히 여겨요.`,
+    바람:`${sunZ.sym||''} ${Object.keys(ZD).find(k=>ZD[k]===sunZ)||''}자리의 영향으로 대화가 통하는 사람에게 끌려요. 지적인 자극이 없으면 관계가 빨리 식을 수 있어요.`,
+    물:`${sunZ.sym||''} ${Object.keys(ZD).find(k=>ZD[k]===sunZ)||''}자리의 영향으로 연애에서 깊은 정서적 연결을 원해요. 표면적인 관계에 쉽게 지치고, 진짜 마음을 나눌 수 있는 사람을 찾아요.`,
+  };
+
+  const sunName=Object.keys(ZD).find(k=>ZD[k]===sunZ)||'';
+  const sunEl=sunZ.el||'흙';
+
+  return{loveStyle, zLove:zLove[sunEl]||'', sunName};
+}
+
+function buildLifeNarrative(sig, name) {
+  const n=name||'당신';
+  const {saju,zodiac,mbti,convergent,tensionTraits}=sig;
+  const topOh=saju.topOh;
+  const m=mbti.vec;
+
+  // 삶의 방향 — 수렴 강도에 따라
+  const overall=sig.overall||50;
+
+  let direction='';
+  if(overall>=80){
+    direction=`세 가지 시스템이 아주 강하게 수렴하고 있어요. ${n}님의 방향성은 꽤 선명한 편이에요. 내가 무엇에 끌리는지, 어떤 상황에서 에너지가 살아나는지를 이미 어느 정도 알고 있을 가능성이 높아요. 지금 필요한 건 확신이 아니라 실행이에요.`;
+  } else if(overall>=55){
+    direction=`세 시스템이 전반적으로 비슷한 방향을 가리키고 있지만, 조금씩 다른 부분도 있어요. ${n}님 안에는 복수의 가능성이 있고, 어느 방향으로도 풍성하게 살 수 있는 사람이에요. 지금은 선택을 좁혀가는 과정이 필요해요.`;
+  } else {
+    direction=`사주, 별자리, MBTI가 각각 다른 방향을 이야기하고 있어요. 이건 ${n}님이 복잡한 사람이라는 뜻이기도 하고, 아직 자신의 방향을 탐색 중이라는 신호이기도 해요. 서두르지 않아도 돼요.`;
+  }
+
+  // 귀인 있는 경우 추가
+  const gwiin=Object.entries(saju.vec?.ohC||{})? // placeholder
+    Object.keys(saju).filter(k=>k==='shinsal') : [];
+
+  const advice=convergent.slice(0,2).map(c=>{
+    const advMap={
+      '창의성':`${n}님의 창의성이 가장 빛나는 환경은 자유가 주어지고 결과물을 직접 만들 수 있는 공간이에요. 틀 안에서만 일해야 한다면 에너지가 빨리 소진돼요.`,
+      '감성':`${n}님의 공감 능력은 관계를 직업으로 연결할 때 강력한 무기가 돼요. 다만 경계선 없이 다 받아들이다 보면 번아웃이 오기 쉬워요.`,
+      '외향성':`${n}님은 혼자 하는 작업보다 팀 안에서 역할이 있을 때 훨씬 잘 돌아가요. 사람과의 접점이 많은 환경을 선택하는 게 좋아요.`,
+      '내향성':`${n}님은 혼자 깊이 생각하는 시간이 필수예요. 그 시간을 확보하지 못하면 겉으로는 멀쩡해 보여도 속에서 에너지가 고갈돼요.`,
+      '논리성':`${n}님은 이유가 납득이 되어야 움직이는 타입이에요. 명확한 목표와 논리적 구조가 있는 환경에서 최고의 퍼포먼스가 나와요.`,
+      '현실성':`${n}님은 뜬구름 잡는 것보다 실제로 손에 잡히는 결과물을 만들 때 만족을 느껴요. 장기 프로젝트보다 단계별로 성취를 확인할 수 있는 구조가 맞아요.`,
+      '추진력':`${n}님은 목표가 있을 때 가장 빛나요. 방향이 불분명한 상황에서는 에너지가 흩어지기 쉬우니, 명확한 목표를 자주 재설정해주세요.`,
+      '자유분방':`${n}님은 선택지가 많은 환경에서 행복해요. 하나만 해야 하는 상황이 길어지면 답답함을 느끼기 시작해요.`,
+    };
+    return advMap[c.key]||'';
+  }).filter(Boolean).join(' ');
+
+  return{direction,advice};
+}
+
+/* ═══════════════════════════════════════════
+   앱 상태 & 렌더링
+═══════════════════════════════════════════ */
+const S={saju:null,zodiac:{sun:'',moon:'',asc:''},mbti:{EI:'',SN:'',TF:'',JP:''}};
+
+function goP(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.mnav-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+}
+
+function switchSub(id,btn){
+  document.querySelectorAll('.subpanel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.snbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sp-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// 가중치 고정 — updateW 불필요
+
+function selM(btn){
+  const ax=btn.dataset.ax,v=btn.dataset.v;
+  S.mbti[ax]=v;
+  document.querySelectorAll(`[data-ax="${ax}"]`).forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const r=[S.mbti.EI,S.mbti.SN,S.mbti.TF,S.mbti.JP].map(x=>x||'—').join(' ');
+  document.getElementById('mbti-show').textContent=r;
+}
+
+// 생년월일 → 태양궁 자동 계산
+const ZODIAC_DATES = [
+  // [월, 일 이상이면, 별자리]
+  [1,  20, '물병자리'],
+  [2,  19, '물고기자리'],
+  [3,  21, '양자리'],
+  [4,  20, '황소자리'],
+  [5,  21, '쌍둥이자리'],
+  [6,  22, '게자리'],
+  [7,  23, '사자자리'],
+  [8,  23, '처녀자리'],
+  [9,  23, '천칭자리'],
+  [10, 24, '전갈자리'],
+  [11, 23, '궁수자리'],
+  [12, 22, '염소자리'],
+];
+
+function getZodiacFromDate(m, d) {
+  if (!m || !d) return null;
+  m = parseInt(m); d = parseInt(d);
+  for (const [zm, zd, name] of ZODIAC_DATES) {
+    if (m === zm && d >= zd) return name;
+  }
+  // 전달의 마지막 별자리
+  const prev = ZODIAC_DATES.find(([zm]) => zm === (m === 1 ? 12 : m - 1));
+  return prev ? prev[2] : null;
+}
+
+function autoDetectZodiac() {
+  const m = document.getElementById('bm').value;
+  const d = document.getElementById('bd').value;
+  const sunSign = getZodiacFromDate(m, d);
+  const sunEl = document.getElementById('z-auto-sun');
+  const descEl = document.getElementById('z-auto-desc');
+
+  if (sunSign) {
+    const zd = ZD[sunSign] || {};
+    sunEl.textContent = `${zd.sym || ''} ${sunSign}`;
+    sunEl.style.color = 'var(--jade)';
+    descEl.innerHTML = `<span style="color:rgba(52,190,182,.7)">${zd.key || ''}</span> · 원소: ${zd.el || ''} (${zd.qual || ''} 궁)`;
+    // 숨겨진 필드에 값 저장
+    document.getElementById('zs-hidden').value = sunSign;
+  } else {
+    sunEl.textContent = '월·일을 입력하면 자동으로 표시돼요';
+    sunEl.style.color = 'var(--dim)';
+    descEl.textContent = '위 사주 입력란에서 월·일을 입력하면 태양궁이 자동으로 계산됩니다.';
+    document.getElementById('zs-hidden').value = '';
+  }
+  updateZAccuracy();
+}
+
+function updateZAccuracy(){
+  const s = document.getElementById('zs-hidden').value;
+  const m = document.getElementById('zm').value;
+  const a = document.getElementById('za').value;
+  const cnt = [s, m, a].filter(Boolean).length;
+  const el = document.getElementById('z-acc');
+  if (cnt === 3) { el.textContent = '✓ 높은 정확도 (태양+달+어센던트 3중)'; el.style.color = 'var(--jade)'; }
+  else if (cnt === 2) { el.textContent = '△ 중간 정확도 (2중)'; el.style.color = 'var(--gold-lt)'; }
+  else if (cnt === 1) { el.textContent = '○ 기본 정확도 (태양궁만)'; el.style.color = 'var(--dim)'; }
+  else { el.textContent = '생년월일을 입력하면 태양궁이 자동 계산돼요'; el.style.color = 'var(--dim)'; }
+}
+
+function runAll(){
+  const y=parseInt(document.getElementById('by').value);
+  const m=parseInt(document.getElementById('bm').value);
+  const d=parseInt(document.getElementById('bd').value);
+  const hv=document.getElementById('bh').value;
+  const h=hv?parseInt(hv):null;
+  const g=document.getElementById('gd').value;
+  const n=document.getElementById('nm').value;
+
+  if(!y||!m||!d){alert('생년월일을 입력해주세요.');return;}
+  if(!document.getElementById('zs-hidden').value){alert('생년월일(월·일)을 입력하면 태양궁이 자동 계산됩니다.');return;}
+  const mbtiStr=[S.mbti.EI,S.mbti.SN,S.mbti.TF,S.mbti.JP].join('');
+  if(mbtiStr.length<4){alert('MBTI 4가지 축을 모두 선택해주세요.');return;}
+
+  // 사주 계산
+  const yg=getYG(y),yj=getYJ(y);
+  const wolInfo=getWolji(y,m,d);
+  const wj=wolInfo.ji,wg=getWG(yg,wj);
+  const ig=getIG(y,m,d),ij=getIJ(y,m,d);
+  const sg=h!==null?getSG(ig,h):null,sj=h!==null?getSJ(h):null;
+  const ss=calcSS(ig,ij,wj,yj,yg);
+  const ps={연:[],월:[],일:[],시:[]};
+  Object.entries(ss).forEach(([nm,pos])=>{
+    pos.forEach(p=>{
+      if(p.startsWith('연'))ps.연.push(nm);
+      else if(p.startsWith('월'))ps.월.push(nm);
+      else if(p.startsWith('일'))ps.일.push(nm);
+      else ps.시.push(nm);
+    });
+  });
+  S.saju={y,m,d,h,g,n,yg,yj,wg,wj,ig,ij,sg,sj,ss,ps,wolInfo};
+
+  // 별자리
+  S.zodiac={
+    sun:document.getElementById('zs-hidden').value,
+    moon:document.getElementById('zm').value,
+    asc:document.getElementById('za').value,
+  };
+
+  // 가중치 고정 5:2:3
+  const weights={ s:50, z:20, m:30 };
+
+  renderSajuPage();
+  renderZodiacPage();
+  renderMbtiPage();
+  renderAnalysis(mbtiStr, weights, n);
+
+  // 분석 탭으로 이동
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.mnav-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-analysis').classList.add('on');
+  document.querySelectorAll('.mnav-btn')[1].classList.add('on');
+}
+
+/* ═══ 분석 탭 렌더링 ═══ */
+function renderAnalysis(mbtiStr, weights, name) {
+  const sig=buildSignalMap(S.saju, {sun:S.zodiac.sun,moon:S.zodiac.moon,asc:S.zodiac.asc,
+    sunD:ZD[S.zodiac.sun]||{},moonD:ZD[S.zodiac.moon]||{},ascD:ZD[S.zodiac.asc]||{}}, mbtiStr, weights);
+
+  if(!sig){document.getElementById('analysis-empty').style.display='block';return;}
+  document.getElementById('analysis-empty').style.display='none';
+  document.getElementById('analysis-content').style.display='block';
+
+  // 수렴 신호
+  const convColors=['var(--gold)','var(--jade)','var(--iris)','var(--amber)'];
+  const dims=['E/I','S/N','T/F','J/P'];
+  const scores=[sig.eiScore,sig.snScore,sig.tfScore,sig.jpScore];
+  document.getElementById('conv-signal').innerHTML=
+    dims.map((d,i)=>{
+      const s=scores[i];
+      const stars=s>=90?'★★★':s>=66?'★★':s>=33?'★':'—';
+      return`<div class="cs-row">
+        <span class="cs-lbl">${d} 수렴</span>
+        <div class="cs-bar"><div class="cs-fill" style="width:${s}%;background:${convColors[i%4]}"></div></div>
+        <span class="cs-pct" style="color:${convColors[i%4]}">${s}%</span>
+        <span class="cs-star" style="color:${convColors[i%4]}">${stars}</span>
+      </div>`;
+    }).join('');
+
+  // 키워드 행
+  const kwHtml=[
+    ...sig.convergent.slice(0,4).map(c=>`<span class="kw ${c.score===3?'s3':c.score===2?'s2':'s1'}">${c.key}</span>`),
+    ...sig.tensionTraits.map(t=>`<span class="kw tension" title="상충: ${t.from}↔${t.to}">${t.to}</span>`),
+  ].join('');
+  document.getElementById('kw-row').innerHTML=kwHtml||'<span style="font-size:.7rem;color:var(--dim)">키워드를 분석 중...</span>';
+
+  const n=name||S.saju?.n||'당신';
+
+  // 핵심 성격
+  const core=buildCoreNarrative(sig,n);
+  let coreHtml=`<div class="narr-block">
+    <div class="narr-label nl-core">◈ 핵심</div>
+    <div class="narr-text">${core.intro}</div>
+  </div>`;
+  core.convItems.forEach((item,i)=>{
+    const cls=item.score===3?'conv-text':item.score===2?'':'';
+    coreHtml+=`<div class="narr-block">
+      <div class="narr-label ${i===0?'nl-conv':''}" style="${i>0?'color:var(--mist)':''}">
+        ${i===0?'◈ 3시스템 공통':i===1?'◈ 2시스템 공통':'◈ 특성'}
+        <span class="source-badge">${sb(item.sources)}</span>
+      </div>
+      <div class="narr-text ${cls}">${item.text}</div>
+    </div>`;
+  });
+  if(core.tensionTexts.length){
+    coreHtml+=`<div class="narr-block">
+      <div class="narr-label nl-tension">⚡ 복합 레이어</div>
+      <div class="narr-text tension-text">${core.tensionTexts[0]}</div>
+    </div>`;
+  }
+  document.getElementById('core-narr').innerHTML=coreHtml;
+
+  // 강점
+  const str=buildStrengthNarrative(sig,n);
+  document.getElementById('strength-narr').innerHTML=`
+    <div class="narr-block">
+      <div class="narr-label nl-core">★ 핵심 강점 <span class="source-badge">${sb(['사주'])}</span></div>
+      <div class="narr-text">${str.strength}</div>
+    </div>
+    <div class="narr-block">
+      <div class="narr-label nl-tension">⚡ 주의할 점</div>
+      <div class="narr-text tension-text">${str.caution}</div>
+    </div>`;
+
+  // 관계
+  const rel=buildRelationNarrative(sig,n);
+  document.getElementById('relation-narr').innerHTML=`
+    <div class="narr-block">
+      <div class="narr-label nl-core">♡ 연애 스타일 <span class="source-badge">${sb(['MBTI'])}</span></div>
+      <div class="narr-text">${rel.loveStyle}</div>
+    </div>
+    <div class="narr-block">
+      <div class="narr-label" style="color:var(--jade)">☽ 별자리 연애 성향 <span class="source-badge">${sb(['별자리'])}</span></div>
+      <div class="narr-text conv-text">${rel.zLove}</div>
+    </div>`;
+
+  // 삶
+  const life=buildLifeNarrative(sig,n);
+  document.getElementById('life-narr').innerHTML=`
+    <div class="narr-block">
+      <div class="narr-label nl-conv">☽ 방향성</div>
+      <div class="narr-text conv-text">${life.direction}</div>
+    </div>
+    ${life.advice?`<div class="narr-block">
+      <div class="narr-label" style="color:var(--mist)">◈ 맞는 환경 & 조언</div>
+      <div class="narr-text layer-text">${life.advice}</div>
+    </div>`:''}`;
+}
+
+/* ═══ 사주 탭 ═══ */
+function pillarBlock(lbl,gan,ji,ssArr,mark){
+  const gd=CGD[gan]||{},jd=JJD[ji]||{};
+  const tags=ssArr.map(nm=>{const i=SSI[nm];return i?`<span class="sd s${i.t}">${nm}</span>`:''}).join('');
+  return `<div class="pil">
+    <div class="plbl">${lbl}</div>
+    ${gan?`<div class="cb ${BGC[gd.oh]||''} ${mark?'il':''}">${gan}</div>
+    <span class="ot ${OHC[gd.oh]||''}">${gd.oh||''}</span>`:
+    `<div class="cb" style="opacity:.2;background:rgba(255,255,255,.04)"></div>`}
+    ${ji?`<div style="height:6px"></div><div class="cb ${BGC[jd.oh]||''}">${ji}</div>
+    <span class="ot ${OHC[jd.oh]||''}">${jd.oh||''}</span>`:'<div style="height:6px"></div><div class="cb" style="opacity:.15;background:rgba(255,255,255,.03)"></div>'}
+    <div class="ssr" style="margin-top:3px">${tags}</div>
+  </div>`;
+}
+
+function renderSajuPage(){
+  const s=S.saju;
+  document.getElementById('saju-empty').style.display='none';
+  document.getElementById('saju-detail').style.display='block';
+
+  const jn=document.getElementById('jeolgi-notice');
+  jn.innerHTML=`<div class="jn ${s.wolInfo.before?'warn':'ok'}">
+    <span style="font-size:.9rem">${s.wolInfo.before?'⚡':'✓'}</span>
+    <span>${s.wolInfo.before?
+      `<b>${s.wolInfo.jn}(${s.wolInfo.jd}일)</b> 이전 출생 — 절기 보정 적용: 월지 <b>${s.wj}</b>으로 수정`:
+      `${s.wolInfo.jn}(${s.wolInfo.jd}일) 이후 출생 — 월지 <b>${s.wj}</b> 정확`}
+    </span></div>`;
+
+  const chars=[[s.yg,CGD],[s.yj,JJD],[s.wg,CGD],[s.wj,JJD],[s.ig,CGD],[s.ij,JJD],...(s.sg?[[s.sg,CGD],[s.sj,JJD]]:[])];
+  const ohC={목:0,화:0,토:0,금:0,수:0};
+  chars.forEach(([c,map])=>{if(c&&map[c])ohC[map[c].oh]++;});
+  const tot=Object.values(ohC).reduce((a,b)=>a+b,0);
+
+  document.getElementById('saju-pillars').innerHTML=
+    pillarBlock('연주',s.yg,s.yj,s.ps.연,false)+
+    pillarBlock('월주',s.wg,s.wj,s.ps.월,false)+
+    pillarBlock('일주',s.ig,s.ij,s.ps.일,true)+
+    (s.sg?pillarBlock('시주',s.sg,s.sj,s.ps.시,false):
+    `<div class="pil"><div class="plbl">시주</div><div class="empty" style="padding:4px 0;font-size:.58rem">미입력</div></div>`);
+
+  document.getElementById('saju-oh').innerHTML=
+    Object.entries(ohC).map(([oh,n])=>{const p=tot?Math.round(n/tot*100):0;
+      return`<div class="obr"><span class="obl ${OHC[oh]}">${oh}</span>
+      <div class="obt"><div class="obf" style="width:${p}%;background:${OHB[oh]}"></div></div>
+      <span class="obn">${n}</span></div>`;}).join('');
+
+  const gw=Object.entries(s.ss).filter(([n])=>SSI[n]?.t==='g');
+  const sl=Object.entries(s.ss).filter(([n])=>SSI[n]?.t==='s');
+  const gi=Object.entries(s.ss).filter(([n])=>SSI[n]?.t==='i');
+
+  document.getElementById('ss-strip').innerHTML=
+    `<div class="s3t"><div class="s3n" style="color:var(--gold-lt)">${gw.length}</div><div class="s3l">귀인성</div></div>
+    <div class="s3t"><div class="s3n" style="color:#ff8080">${sl.length}</div><div class="s3l">흉살</div></div>
+    <div class="s3t"><div class="s3n" style="color:var(--jade)">${gi.length}</div><div class="s3l">길성</div></div>`;
+
+  function sscards(arr,cls){
+    if(!arr.length)return`<div style="font-size:.65rem;color:var(--dim);opacity:.45">없음</div>`;
+    return arr.map(([nm,pos])=>{const i=SSI[nm]||{d:''};
+      return`<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px;margin-bottom:7px">
+        <div style="font-size:.72rem;font-weight:700;color:${cls==='g'?'var(--gold-lt)':cls==='s'?'#ff8080':'var(--jade)'};margin-bottom:3px">${nm}</div>
+        <div style="font-size:.6rem;color:var(--dim);margin-bottom:4px">${pos.join(', ')} 발동</div>
+        <div style="font-size:.65rem;color:rgba(196,216,228,.65);line-height:1.55">${i.d}</div>
+      </div>`;}).join('');
+  }
+  document.getElementById('shinsal-content').innerHTML=
+    `<div style="font-size:.62rem;color:var(--dim);letter-spacing:.06em;margin-bottom:7px">⭐ 귀인·길신</div>
+    ${sscards([...gw,...gi],'g')}
+    <div style="font-size:.62rem;color:var(--dim);letter-spacing:.06em;margin:10px 0 7px">⚡ 신살</div>
+    ${sscards(sl,'s')}`;
+}
+
+/* ═══ 별자리 탭 ═══ */
+function renderZodiacPage(){
+  document.getElementById('zodiac-empty').style.display='none';
+  document.getElementById('zodiac-detail').style.display='block';
+
+  const sun=S.zodiac.sun,moon=S.zodiac.moon,asc=S.zodiac.asc;
+  const sd=ZD[sun]||{},md=ZD[moon]||{},ad=ZD[asc]||{};
+
+  function zSlot(t,nm,d,role){
+    const el=d.el||'';
+    const col=ZEL_COL[el]||'rgba(255,255,255,.3)';
+    return`<div class="zs"><div class="zt">${t}</div>
+      <div class="zn">${d.sym||''} ${nm||'—'}</div>
+      <div class="ze" style="color:${col}">${el}${d.qual?' · '+d.qual:''}</div>
+      <div style="font-size:.52rem;color:var(--dim);margin-top:2px">${role}</div>
+    </div>`;
+  }
+  document.getElementById('z3-slots').innerHTML=
+    zSlot('태양궁',sun,sd,'외적 자아')+
+    zSlot('달궁',moon,md,'내면 감정')+
+    zSlot('어센던트',asc,ad,'첫인상');
+
+  const sunName=sun;const moonName=moon;
+  document.getElementById('z-narr').innerHTML=
+    `<b style="color:var(--jade)">${sd.sym||''} ${sunName}</b> — ${sd.key||''}. ` +
+    (moon?`달궁 <b style="color:var(--jade)">${md.sym||''} ${moonName}</b>의 영향으로 내면에는 ${md.key||''} 성향이 있어요. `:'') +
+    (asc?`어센던트 <b style="color:var(--jade)">${ad.sym||''} ${asc}</b>는 처음 만나는 사람에게 ${ad.key||''}한 인상을 주는 면이에요.`:'');
+
+  // 원소 분석
+  const els=[sd.el,md.el,ad.el].filter(Boolean);
+  const elCount={};els.forEach(e=>{elCount[e]=(elCount[e]||0)+1;});
+  const elDesc={
+    불:`불 원소가 강하게 나타나고 있어요. 열정, 행동력, 직접적인 표현이 자연스럽게 나와요. 에너지가 넘치는 대신 지속력에 신경을 써야 해요.`,
+    흙:`흙 원소가 중심이에요. 현실적이고 안정을 추구하며 신뢰를 쌓는 힘이 있어요. 변화에 느리게 반응하는 면도 있지만 그게 강점이기도 해요.`,
+    바람:`바람 원소가 강해요. 소통과 지적 자극을 좋아하고 변화에 유연하게 적응해요. 한 곳에 정착하는 것보다 다양한 경험을 원해요.`,
+    물:`물 원소가 깊이 있어요. 감성과 직관이 발달해 있고 타인의 감정을 잘 읽어요. 경계를 유지하지 않으면 감정적으로 소진되기 쉬워요.`,
+  };
+  const topEl=Object.entries(elCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||sd.el||'흙';
+  document.getElementById('z-element-detail').innerHTML=
+    `<div style="font-size:.82rem;line-height:1.9;color:rgba(200,220,230,.8)">${elDesc[topEl]||''}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+      ${Object.entries(elCount).map(([el,n])=>`<span class="pill" style="border-color:${ZEL_COL[el]}40;color:${ZEL_COL[el]};background:${ZEL_COL[el]}12">${el} ×${n}</span>`).join('')}
+    </div>`;
+}
+
+/* ═══ MBTI 탭 ═══ */
+function renderMbtiPage(){
+  const mbtiStr=[S.mbti.EI,S.mbti.SN,S.mbti.TF,S.mbti.JP].join('');
+  document.getElementById('mbti-empty').style.display='none';
+  document.getElementById('mbti-detail').style.display='block';
+
+  const d=MBTI_STACK[mbtiStr]||{stack:['—','—','—','—'],key:'—'};
+  const stackLabels=['주기능 (가장 발달)','부기능 (지원)','3차 기능','열등기능 (성장 과제)'];
+  const stackColors=['var(--iris)','var(--jade)','var(--gold)','var(--silver)'];
+
+  document.getElementById('mbti-stack').innerHTML=
+    `<div style="text-align:center;font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;
+      letter-spacing:.2em;color:var(--gold-lt);margin-bottom:16px;text-shadow:0 0 18px rgba(200,168,72,.3)">${mbtiStr}</div>` +
+    d.stack.map((fn,i)=>`<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div style="width:36px;height:36px;border-radius:50%;background:${stackColors[i]}18;
+        border:1px solid ${stackColors[i]}40;display:flex;align-items:center;justify-content:center;
+        font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:700;color:${stackColors[i]};flex-shrink:0">${fn}</div>
+      <div>
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:2px">${stackLabels[i]}</div>
+        <div style="font-size:.72rem;color:${stackColors[i]}">${fn}</div>
+      </div>
+    </div>`).join('');
+
+  const name=S.saju?.n||'당신';
+  const mbtiNarr={
+    EI:S.mbti.EI==='E'?`${name}님은 외부 세계에서 에너지를 얻어요. 대화하고 행동하면서 생각이 정리되는 타입이에요.`:
+      `${name}님은 내면에서 에너지를 얻어요. 혼자만의 시간이 충전의 필수예요.`,
+    SN:S.mbti.SN==='N'?`직관(N)이 발달해 있어요. 지금보다 가능성과 패턴을 먼저 봐요.`:
+      `감각(S)이 발달해 있어요. 현재와 실제에 집중하며 디테일을 잘 잡아요.`,
+    TF:S.mbti.TF==='T'?`판단할 때 논리를 우선해요. 감정보다 근거를 먼저 찾는 편이에요.`:
+      `판단할 때 감정을 우선해요. 사람과의 관계와 영향을 먼저 고려해요.`,
+    JP:S.mbti.JP==='J'?`계획과 구조를 선호해요. 정해진 틀 안에서 더 안정적으로 움직여요.`:
+      `유연성과 즉흥성을 선호해요. 열린 결말을 두는 편이 더 편해요.`,
+  };
+  document.getElementById('mbti-narr').innerHTML=
+    Object.entries(mbtiNarr).map(([dim,text])=>
+      `<div style="margin-bottom:13px"><div style="font-size:.62rem;color:var(--dim);letter-spacing:.05em;margin-bottom:5px">${dim}</div>
+      <div style="font-size:.78rem;line-height:1.88;color:rgba(204,220,232,.84)">${text}</div></div>`
+    ).join('');
+}
+
+/* ═══ AI — 역술인 장문 분석 ═══ */
+async function runAI(){
+  const btn=document.getElementById('ai-btn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="ld"><span></span><span></span><span></span></span> 풀이 중...';
+  const out=document.getElementById('ai-out');
+  out.innerHTML='<span class="ld"><span></span><span></span><span></span></span> 사주와 별자리, MBTI를 함께 살피고 있습니다...';
+
+  const s=S.saju;
+  const mbtiStr=[S.mbti.EI,S.mbti.SN,S.mbti.TF,S.mbti.JP].join('');
+  const weights={s:50,z:20,m:30};
+  const sig=buildSignalMap(s,{
+    sun:S.zodiac.sun,moon:S.zodiac.moon,asc:S.zodiac.asc,
+    sunD:ZD[S.zodiac.sun]||{},moonD:ZD[S.zodiac.moon]||{},ascD:ZD[S.zodiac.asc]||{}
+  },mbtiStr,weights);
+
+  const convergentStr=sig?.convergent.map(c=>`${c.key}(${c.score}시스템 수렴)`).join(', ')||'없음';
+  const tensionStr=sig?.tensionTraits.map(t=>`${t.from}↔${t.to}`).join(', ')||'없음';
+  const gw=Object.entries(s.ss).filter(([nm])=>SSI[nm]?.t==='g').map(([nm])=>nm).join(', ')||'없음';
+  const sl=Object.entries(s.ss).filter(([nm])=>SSI[nm]?.t==='s').map(([nm])=>nm).join(', ')||'없음';
+  const n=s.n||'이 분';
+  const sunZD=ZD[S.zodiac.sun]||{};
+  const moonZD=ZD[S.zodiac.moon]||{};
+  const mbtiD=MBTI_STACK[mbtiStr]||{};
+
+  const system=`당신은 30년 경력의 명리학자이자 서양 점성술사, 심리상담사의 지식을 두루 갖춘 통합 역술인입니다.
+
+【역할과 말투】
+- 오랜 세월 수많은 사람을 봐온 노련한 역술인처럼 말합니다
+- 단정적이되 따뜻하고, 권위 있되 친근합니다
+- "~하시겠습니다", "~이십니다" 같은 경어체를 사용합니다
+- 추상적 키워드 나열이 아닌, 그 사람의 구체적인 삶의 장면을 묘사합니다
+- 예시: "회의실에서 혼자 남아 자료를 정리하는 모습", "사람들 앞에서 이야기할 때 눈이 빛나는 분"
+
+【분석 원칙 — 수렴·소거 규칙】
+- 사주(50%) + 별자리(20%) + MBTI(30%) 가중합산
+- 3개 시스템이 모두 같은 방향을 가리키면 → 가장 강하게, 확신 있게 단언 (★★★)
+- 2개 시스템이 일치하면 → 명확하게 서술 (★★)
+- 1개 시스템에서만 나타나면 → 가중치만큼 약하게 언급
+- 시스템 간 상충하는 특성은 반드시 소거하거나, 하나의 복합 성격으로 통합
+
+【분량 및 구성 — A3 용지 4장 분량 (약 3,500~4,000자)】
+반드시 아래 7개 챕터를 모두 작성하십시오. 각 챕터는 최소 400~600자 이상으로 충분히 풀어 써야 합니다.
+
+1장. 명식 개관 (命式 槪觀) — 사주팔자 전체 흐름 해설
+2장. 천성과 기질 — 이 사람이 타고난 본래의 성품
+3장. 귀인과 살성 — 운명의 보호막과 주의할 에너지
+4장. 우주적 원형 — 별자리가 말해주는 영혼의 원형
+5장. 인지 패턴 — MBTI가 밝혀주는 마음의 작동 방식
+6장. 관계와 사랑 — 인연을 맺고 유지하는 방식
+7장. 삶의 흐름과 조언 — 이 사람이 나아갈 방향
+
+【표현 금지사항】
+- "~입니다", "~습니다" 보다는 "~이십니다", "~하시겠습니다" 경어 역술체 사용
+- "AI 분석 결과" 같은 기계적 표현 금지
+- 단순 나열 금지 — 반드시 이야기를 풀어쓰는 방식으로
+- 시스템 간 모순되는 내용은 절대 함께 쓰지 말 것`;
+
+  const userData=`【${n}님 사주명식】
+사주팔자: ${s.yg}${s.yj}년 ${s.wg}${s.wj}월 ${s.ig}${s.ij}일${s.sg?` ${s.sg}${s.sj}시`:'(시 미상)'}
+일간: ${s.ig} (${CGD[s.ig]?.oh||''}${CGD[s.ig]?.yn||''}) / 성별: ${s.g||'미입력'}
+주도 오행: ${sig?.saju?.topOh||''} (${sig?.saju?.secOh||''} 보조)
+귀인·길신: ${gw}
+신살: ${sl}
+
+【별자리】
+태양궁: ${S.zodiac.sun||'미입력'} ${sunZD.sym||''} — ${sunZD.key||''} (원소: ${sunZD.el||''}, ${sunZD.qual||''} 궁)
+${S.zodiac.moon?`달궁: ${S.zodiac.moon} ${moonZD.sym||''} — ${moonZD.key||''}`:``}
+${S.zodiac.asc?`어센던트: ${S.zodiac.asc}`:``}
+
+【MBTI】
+유형: ${mbtiStr} — ${mbtiD.key||''}
+인지기능 스택: ${(mbtiD.stack||[]).join(' → ')}
+
+【트리니티 수렴 분석】
+수렴 키워드: ${convergentStr}
+상충 요소 (소거 대상): ${tensionStr}
+E/I 수렴도: ${sig?.eiScore||0}% / S/N: ${sig?.snScore||0}% / T/F: ${sig?.tfScore||0}% / 전체: ${sig?.overall||0}%
+가중치: 사주 50% · 별자리 20% · MBTI 30%
+
+위 데이터를 바탕으로 7개 챕터를 모두 작성해주십시오.
+각 챕터 제목은 【 】 안에 한자와 한글을 함께 쓰고, 충분한 분량으로 역술인처럼 풀어서 설명해주십시오.`;
+
+  try{
+    const res=await fetch('/api/analyze',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:4096,
+        system,
+        messages:[{role:'user',content:userData}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content?.[0]?.text||'오류가 발생했습니다.';
+
+    // 챕터별 스타일링 렌더링
+    out.innerHTML = renderMasterReaderText(text);
+  }catch(e){
+    out.textContent='오류: '+e.message;
+  }
+  btn.disabled=false;
+  btn.textContent='✦ Claude AI 종합 분석 요청';
+}
+
+function renderMasterReaderText(text){
+  // 챕터 제목 【...】 감지해서 스타일 분리
+  const lines = text.split('\n');
+  let html = '';
+  for(const line of lines){
+    const trimmed = line.trim();
+    if(!trimmed){ html += '<div style="height:10px"></div>'; continue; }
+
+    // 챕터 제목 감지
+    if(/^【.*】/.test(trimmed)){
+      const chapterMatch = trimmed.match(/^(【.*?】)(.*)/);
+      const title = chapterMatch?.[1] || trimmed;
+      const rest = chapterMatch?.[2]?.trim() || '';
+      html += `
+        <div style="margin:24px 0 10px;padding-bottom:8px;border-bottom:1px solid rgba(200,168,72,.22)">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;
+            color:var(--gold-lt);letter-spacing:.06em">${title}</span>
+          ${rest?`<span style="font-size:.8rem;color:var(--text)">${rest}</span>`:''}
+        </div>`;
+      continue;
+    }
+    // ★ 강조 패턴
+    const stared = trimmed
+      .replace(/★★★/g,'<span style="color:var(--gold-lt);font-weight:700">★★★</span>')
+      .replace(/★★/g,'<span style="color:var(--jade);font-weight:700">★★</span>')
+      .replace(/★/g,'<span style="color:var(--gold);font-weight:700">★</span>');
+    html += `<div style="font-family:'Noto Serif KR',serif;font-size:.82rem;line-height:2.05;
+      color:rgba(210,226,238,.88);margin-bottom:4px;word-break:keep-all">${stared}</div>`;
+  }
+  return html;
+}
+
+/* ═══════════════════════════════════════════
+   프리미엄 기능 — 궁합 / 재물운 / 직업&학업운
+═══════════════════════════════════════════ */
+
+// ── 프리미엄 패널 열기/닫기 ──
+let currentPremium = null;
+function openPremium(id, btn) {
+  const allBtns = document.querySelectorAll('.pnav-btn');
+  const allPanels = document.querySelectorAll('.ppanel');
+
+  if (currentPremium === id) {
+    // 같은 버튼 재클릭 → 닫기
+    allBtns.forEach(b => b.classList.remove('on'));
+    allPanels.forEach(p => p.classList.remove('on'));
+    currentPremium = null;
+    return;
+  }
+
+  allBtns.forEach(b => b.classList.remove('on'));
+  allPanels.forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('pp-' + id).classList.add('on');
+  currentPremium = id;
+
+  // 기존 메인 페이지 탭에서 벗어나도록 스크롤
+  document.getElementById('pp-' + id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── 칩 토글 ──
+function toggleChip(el) {
+  el.classList.toggle('on');
+}
+function toggleCareerStatus(el) {
+  document.querySelectorAll('#career-status-chips .chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── 오행 궁합 점수 계산 ──
+const OH_COMPAT = {
+  목:{목:70,화:92,토:45,금:38,수:88},
+  화:{목:92,화:68,토:85,금:42,수:35},
+  토:{목:48,화:88,토:75,금:90,수:44},
+  금:{목:40,화:38,토:90,금:65,수:88},
+  수:{목:90,화:35,토:42,금:88,수:72},
+};
+
+// ── 사주 계산 (상대방용) ──
+function calcPartnerSaju(y, m, d, h) {
+  const yg = getYG(y), yj = getYJ(y);
+  const wolInfo = getWolji(y, m, d);
+  const wj = wolInfo.ji, wg = getWG(yg, wj);
+  const ig = getIG(y, m, d), ij = getIJ(y, m, d);
+  const sg = h !== null ? getSG(ig, h) : null;
+  const sj = h !== null ? getSJ(h) : null;
+  return { yg, yj, wg, wj, ig, ij, sg, sj, igOh: CGD[ig]?.oh || '토' };
+}
+
+// ── 오행 카운트 ──
+function countOh(saju) {
+  const c = {목:0,화:0,토:0,금:0,수:0};
+  [[saju.yg,CGD],[saju.yj,JJD],[saju.wg,CGD],[saju.wj,JJD],[saju.ig,CGD],[saju.ij,JJD]]
+    .forEach(([ch, map]) => { if (ch && map[ch]) c[map[ch].oh]++; });
+  return c;
+}
+
+/* ════════════════════════════
+   ♡ 궁합 분석
+════════════════════════════ */
+async function runCompatAnalysis() {
+  if (!S.saju) { alert('먼저 입력 탭에서 본인 사주를 입력해주세요.'); return; }
+
+  const cy = parseInt(document.getElementById('cy').value);
+  const cm = parseInt(document.getElementById('cm').value);
+  const cd = parseInt(document.getElementById('cd').value);
+  const chv = document.getElementById('ch').value;
+  const ch_h = chv ? parseInt(chv) : null;
+  const cg = document.getElementById('cg').value;
+  const cn = document.getElementById('cn').value || '상대방';
+
+  if (!cy || !cm || !cd) { alert('상대방 생년월일을 입력해주세요.'); return; }
+
+  const partner = calcPartnerSaju(cy, cm, cd, ch_h);
+
+  // 분석 항목 수집
+  const items = [...document.querySelectorAll('[data-compat].on')].map(c => c.dataset.compat);
+
+  // 점수 계산
+  const myOh = S.saju ? CGD[S.saju.ig]?.oh || '토' : '토';
+  const ohScore = (OH_COMPAT[myOh] || {})[partner.igOh] || 50;
+
+  // 오행 균형 보너스
+  const myOhC = countOh(S.saju);
+  const ptOhC = countOh(partner);
+  let balanceBonus = 0;
+  const combined = {};
+  Object.keys(myOhC).forEach(oh => { combined[oh] = (myOhC[oh] || 0) + (ptOhC[oh] || 0); });
+  const vals = Object.values(combined);
+  const maxV = Math.max(...vals), minV = Math.min(...vals);
+  if (maxV - minV <= 2) balanceBonus = 8; // 오행 균형
+
+  const total = Math.min(100, Math.round(ohScore * 0.7 + 50 * 0.3 + balanceBonus));
+
+  // 등급
+  const grades = [[90,'천생연분 ✨','#38c0b8'],[80,'좋은 인연 ★','#c8a84a'],[65,'노력하는 인연 ☽','#8888cc'],[50,'도전적 인연 ⚡','#d09040'],[0,'인연의 시련 △','#c85050']];
+  const [,glabel,gcolor] = grades.find(([min]) => total >= min) || [0,'—','#888'];
+
+  // UI 렌더
+  const meN = S.saju.n || '나';
+  document.getElementById('compat-persons').innerHTML = `
+    <div class="ct r"><span>♡</span>두 사람</div>
+    <div class="partner-row">
+      <div class="pc me-side">
+        <div class="pc-lbl me">나 — ${meN}</div>
+        <div class="pc-ilju">${S.saju.ig}${S.saju.ij}</div>
+        <div class="pc-ohname" style="color:${OHB[myOh]}">${myOh} 일간</div>
+        <div style="font-size:.58rem;color:var(--dim);margin-top:3px">${S.saju.yg}${S.saju.yj} ${S.saju.wg}${S.saju.wj} ${S.saju.ig}${S.saju.ij}</div>
+      </div>
+      <div class="vs-circle">vs</div>
+      <div class="pc you-side">
+        <div class="pc-lbl you">상대 — ${cn}</div>
+        <div class="pc-ilju">${partner.ig}${partner.ij}</div>
+        <div class="pc-ohname" style="color:${OHB[partner.igOh]}">${partner.igOh} 일간</div>
+        <div style="font-size:.58rem;color:var(--dim);margin-top:3px">${partner.yg}${partner.yj} ${partner.wg}${partner.wj} ${partner.ig}${partner.ij}</div>
+      </div>
+    </div>`;
+
+  const ring = document.getElementById('compat-ring');
+  const deg = total / 100 * 360;
+  ring.style.background = `conic-gradient(${gcolor} ${deg}deg, rgba(255,255,255,.04) ${deg}deg)`;
+  document.getElementById('compat-score-num').textContent = total;
+  document.getElementById('compat-score-num').style.color = gcolor;
+  document.getElementById('compat-grade-lbl').textContent = glabel;
+  document.getElementById('compat-grade-lbl').style.color = gcolor;
+
+  document.getElementById('compat-score-bars').innerHTML =
+    [['☯ 오행 상성', ohScore, OHB[myOh]], ['⚖ 오행 균형', 50 + balanceBonus * 5, '#8888cc'], ['♡ 종합', total, gcolor]]
+    .map(([l, s, c]) => `<div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+      <span style="font-size:.62rem;color:var(--dim);width:68px;flex-shrink:0">${l}</span>
+      <div style="flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${s}%;background:${c};border-radius:3px;transition:width .9s ease"></div>
+      </div>
+      <span style="font-family:'Cormorant Garamond',serif;font-size:.9rem;font-weight:700;color:${c};width:28px;text-align:right">${s}</span>
+    </div>`).join('');
+
+  document.getElementById('compat-result-area').style.display = 'block';
+
+  // AI 풀이
+  const out = document.getElementById('compat-narr-out');
+  out.innerHTML = '<span class="ld"><span></span><span></span><span></span></span> 궁합을 살피고 있습니다...';
+
+  const itemLabels = { marriage:'결혼 시기', child:'자녀 운 (세부)', harmony:'오행 궁합', daily:'일상 궁합', conflict:'갈등 패턴' };
+  const selectedItems = items.map(i => itemLabels[i] || i).join(', ');
+
+  const myGw = Object.entries(S.saju.ss || {}).filter(([n]) => SSI[n]?.t === 'g').map(([n]) => n).join(', ') || '없음';
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        system: `당신은 30년 경력의 사주명리학자로, 궁합과 혼인, 자녀운을 전문으로 보는 역술인입니다.
+두 사람의 사주팔자를 면밀히 살펴 궁합의 길흉을 판단하고, 구체적인 시기와 상황을 안내합니다.
+
+【말투 원칙】
+- "~하시겠습니다", "~이십니다" 경어 역술체
+- 구체적 연도, 나이, 계절을 언급 (예: "2027년 병술년 가을 무렵", "서른두 살 전후")
+- 추상적 표현 금지, 삶의 실제 장면으로 묘사
+- 자녀 운은 특히 세부적으로: 첫째 시기, 성별 경향, 임신·출산 환경까지
+
+【분량】각 분석 항목당 최소 400자 이상, 전체 A3 2장 분량`,
+        messages: [{
+          role: 'user', content:
+`【나】${meN} / 사주: ${S.saju.yg}${S.saju.yj} ${S.saju.wg}${S.saju.wj} ${S.saju.ig}${S.saju.ij}${S.saju.sg ? ' ' + S.saju.sg + S.saju.sj : ''} / 일간: ${S.saju.ig}(${myOh}) / 성별: ${S.saju.g || '미입력'} / 귀인: ${myGw}
+
+【상대】${cn} / 사주: ${partner.yg}${partner.yj} ${partner.wg}${partner.wj} ${partner.ig}${partner.ij}${partner.sg ? ' ' + partner.sg + partner.sj : ''} / 일간: ${partner.ig}(${partner.igOh}) / 성별: ${cg || '미입력'}
+
+오행 궁합 점수: ${ohScore}점 / 종합: ${total}점 (${glabel})
+
+【분석 요청 항목】${selectedItems}
+
+각 항목을 역술인처럼 충분히 풀어서 설명해주십시오.
+- 결혼 시기: 구체적 연도와 나이, 계절, 어떤 상황에서 만나 결혼하게 되는지
+- 자녀 운: 자녀 수, 첫째 시기(연도·나이), 임신 과정의 특징, 아이의 성향, 양육 환경
+- 오행 궁합: 두 사람의 오행이 어떻게 작용하는지, 보완하는 부분과 마찰이 생기는 부분
+- 일상 궁합: 함께 살 때 어떤 점이 편하고 어떤 점에서 부딪히는지
+- 갈등 패턴: 어떤 상황에서 갈등이 생기고 어떻게 풀어나갈 수 있는지`
+        }]
+      })
+    });
+    const data = await res.json();
+    out.innerHTML = renderMasterReaderText(data.content?.[0]?.text || '오류가 발생했습니다.');
+  } catch (e) {
+    out.textContent = '오류: ' + e.message;
+  }
+}
+
+/* ════════════════════════════
+   💰 재물운 분석
+════════════════════════════ */
+async function runWealthAnalysis() {
+  if (!S.saju) { alert('먼저 입력 탭에서 사주를 입력해주세요.'); return; }
+
+  const items = [...document.querySelectorAll('[data-wealth].on')].map(c => c.dataset.wealth);
+  if (!items.length) { alert('분석 항목을 하나 이상 선택해주세요.'); return; }
+
+  const out = document.getElementById('wealth-narr-out');
+  document.getElementById('wealth-result-area').style.display = 'block';
+  out.innerHTML = '<span class="ld"><span></span><span></span><span></span></span> 재물운을 살피고 있습니다...';
+
+  const itemLabels = { realestate: '부동산', stock: '주식·투자', savings: '예금·적금', timing: '재물 시기', region: '유리한 지역' };
+  const selectedItems = items.map(i => itemLabels[i] || i).join(', ');
+
+  const s = S.saju;
+  const myOh = CGD[s.ig]?.oh || '토';
+  const ohC = countOh(s);
+  const sortedOh = Object.entries(ohC).sort((a, b) => b[1] - a[1]);
+  const topOh = sortedOh[0][0];
+  const gw = Object.entries(s.ss || {}).filter(([n]) => SSI[n]?.t === 'g').map(([n]) => n).join(', ') || '없음';
+  const zodiacSun = S.zodiac?.sun || '미입력';
+  const mbtiStr = [S.mbti.EI, S.mbti.SN, S.mbti.TF, S.mbti.JP].filter(Boolean).join('');
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        system: `당신은 사주명리로 재물운과 투자 적성을 전문으로 보는 역술인입니다.
+오행과 일간의 특성, 귀인성을 종합하여 이 사람에게 맞는 재물 운용 전략을 안내합니다.
+
+【핵심 원칙】
+- 추상적 조언 금지. 반드시 구체적으로 안내
+- 부동산: "강남보다 수원·용인 같은 경기 남부가 맞다", "주거용보다 상업용", "아파트보다 토지" 같은 수준으로
+- 주식: "안정형 배당주", "바이오·헬스케어 섹터", "단타보다 장기 적립" 수준으로
+- 지역: 실제 지명을 들어 설명 ("바다보다 내륙", "서울보다 지방 중소도시", "수도권 외곽")
+- 시기: 구체적 연도와 나이 언급
+- 경어 역술체 사용, A3 2장 분량`,
+        messages: [{
+          role: 'user', content:
+`【사주】${s.yg}${s.yj} ${s.wg}${s.wj} ${s.ig}${s.ij}${s.sg ? ' ' + s.sg + s.sj : ''} / 일간: ${s.ig}(${myOh}) / 성별: ${s.g || '미입력'}
+주도 오행: ${topOh} / 오행분포: 목${ohC.목||0} 화${ohC.화||0} 토${ohC.토||0} 금${ohC.금||0} 수${ohC.수||0}
+귀인·길신: ${gw}
+별자리: ${zodiacSun} / MBTI: ${mbtiStr || '미입력'}
+
+【분석 요청 항목】${selectedItems}
+
+각 항목을 아래 기준으로 충분히 풀어주십시오:
+
+◎ 부동산 — 이 사람에게 맞는 부동산 유형(아파트/토지/상가/오피스텔), 유리한 지역(실제 지명), 매수 시기(연도·나이), 주의할 투자 유형
+
+◎ 주식·투자 — 어울리는 투자 성향(가치/성장/배당), 유망 섹터(구체적), 투자 타이밍, 손실 주의 패턴
+
+◎ 예금·적금 — 적합한 저축 방식, 금융상품 유형, 목돈 만들기 전략
+
+◎ 재물 시기 — 인생에서 재물이 들어오는 큰 시기 3번, 조심해야 할 시기, 현재 운의 흐름
+
+◎ 유리한 지역 — 사업·직장·거주에 유리한 방향과 지역(실제 지명 포함), 피해야 할 지역`
+        }]
+      })
+    });
+    const data = await res.json();
+    out.innerHTML = renderMasterReaderText(data.content?.[0]?.text || '오류가 발생했습니다.');
+  } catch (e) {
+    out.textContent = '오류: ' + e.message;
+  }
+}
+
+/* ════════════════════════════
+   🎯 직업·학업운 분석
+════════════════════════════ */
+async function runCareerAnalysis() {
+  if (!S.saju) { alert('먼저 입력 탭에서 사주를 입력해주세요.'); return; }
+
+  const items = [...document.querySelectorAll('[data-career].on')].map(c => c.dataset.career);
+  const status = document.querySelector('#career-status-chips .chip.on')?.dataset.status || 'employed';
+  const careerInput = document.getElementById('career-input').value;
+
+  const out = document.getElementById('career-narr-out');
+  document.getElementById('career-result-area').style.display = 'block';
+  out.innerHTML = '<span class="ld"><span></span><span></span><span></span></span> 직업·학업운을 살피고 있습니다...';
+
+  const statusLabel = { student: '학생·수험생', employed: '직장인', business: '창업·사업자', change: '이직·전환 준비' };
+  const itemLabels = { aptitude: '적성·재능', field: '유망 분야', growth: '성장 경로', timing: '중요 시기', style: '업무 스타일' };
+  const selectedItems = items.map(i => itemLabels[i] || i).join(', ');
+
+  const s = S.saju;
+  const myOh = CGD[s.ig]?.oh || '토';
+  const ohC = countOh(s);
+  const gw = Object.entries(s.ss || {}).filter(([n]) => SSI[n]?.t === 'g').map(([n]) => n).join(', ') || '없음';
+  const zodiacSun = S.zodiac?.sun || '미입력';
+  const zodiacKey = (ZD[zodiacSun] || {}).key || '';
+  const mbtiStr = [S.mbti.EI, S.mbti.SN, S.mbti.TF, S.mbti.JP].filter(Boolean).join('');
+  const mbtiKey = (MBTI_STACK[mbtiStr] || {}).key || '';
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        system: `당신은 사주명리로 직업 적성과 진로를 전문으로 보는 역술인입니다.
+타고난 오행과 일간의 성질, MBTI 인지기능, 별자리 원소를 통합하여 이 사람에게 맞는 직업과 성장 경로를 안내합니다.
+
+【핵심 원칙】
+- 실제 직업명을 구체적으로 언급 (예: "교사보다 강사·코치", "대기업보다 스타트업", "개발직보다 기획직")
+- 성장 경로는 5년 단위로 구체적으로 (입사 → 전문화 → 리더십 → 전환 등)
+- 수험생이면: 유리한 전공, 시험 준비 전략, 합격 시기
+- 이직·전환이면: 적합한 업종, 타이밍, 주의할 점
+- 사주의 귀인성이 어떤 직업적 기회로 나타나는지도 포함
+- 경어 역술체 사용, A3 2장 분량`,
+        messages: [{
+          role: 'user', content:
+`【사주】${s.yg}${s.yj} ${s.wg}${s.wj} ${s.ig}${s.ij}${s.sg ? ' ' + s.sg + s.sj : ''} / 일간: ${s.ig}(${myOh}) / 성별: ${s.g || '미입력'}
+오행분포: 목${ohC.목||0} 화${ohC.화||0} 토${ohC.토||0} 금${ohC.금||0} 수${ohC.수||0} / 귀인: ${gw}
+별자리: ${zodiacSun}${zodiacKey ? ' (' + zodiacKey + ')' : ''}
+MBTI: ${mbtiStr || '미입력'}${mbtiKey ? ' (' + mbtiKey + ')' : ''}
+현재 상황: ${statusLabel[status]}
+관심 분야·직업: ${careerInput || '미입력'}
+
+【분석 요청 항목】${selectedItems}
+
+각 항목을 아래 기준으로 충분히 풀어주십시오:
+
+◎ 적성·재능 — 이 사람이 타고난 재능 영역, 두각을 드러내는 환경, 가장 빛나는 역할
+
+◎ 유망 분야 — 실제 직업명 5가지 이상 제시, 각각 이 사람에게 맞는 이유 설명
+  (현재 관심 분야가 있다면 그것이 맞는지, 더 나은 대안이 있는지도 포함)
+
+◎ 성장 경로 — 현재 상황(${statusLabel[status]})에서 출발해 10년간의 직업적 성장 경로
+  5년 단위로 구체적인 목표와 전략 제시
+
+◎ 중요 시기 — 직업적으로 중요한 전환점이 되는 시기 3회 (연도·나이 명시)
+  기회를 잡아야 할 시기와 신중해야 할 시기
+
+◎ 업무 스타일 — 이 사람이 가장 잘 맞는 조직 문화, 업무 방식, 협업 스타일
+  피해야 할 환경과 사람 유형도 포함`
+        }]
+      })
+    });
+    const data = await res.json();
+    out.innerHTML = renderMasterReaderText(data.content?.[0]?.text || '오류가 발생했습니다.');
+  } catch (e) {
+    out.textContent = '오류: ' + e.message;
+  }
+}
+</script>
+</body>
+</html>
